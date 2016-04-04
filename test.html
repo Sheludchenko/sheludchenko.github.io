@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		body { 
+			margin: 0px; 
+		}
+		
+		#wrapper {
+		   position: absolute;
+		   left: 50%;
+		   width: 1200px;
+		   margin-left: -600px;
+		}
+		
+	</style>
+	<title>8bit - Test page</title>
+	<link rel="apple-touch-icon" sizes="57x57" href="images/favicon/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="images/favicon/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/favicon/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="images/favicon/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/favicon/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="images/favicon/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="images/favicon/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="images/favicon/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="images/favicon/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="images/favicon/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+	<link rel="manifest" href="images/favicon/manifest.json">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="images/favicon/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/monokai_sublime.min.css"></link>
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/languages/powershell.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body style="font-size: 12pt;">
+	<div id="wrapper">
+		<pre>
+			<code class="language-powershell hljs">
+[CmdletBinding()]
+param(
+	[Parameter(Mandatory=$true)]
+	[string]$Name,
+	[Parameter(Mandatory=$true)]
+	[string]$User,
+	[Parameter(Mandatory=$true)]
+	[string]$ActionPath,
+	[Parameter(Mandatory=$true)]
+	[string]$ActionArguments
+)
+
+$Service = New-Object -ComObject("Schedule.Service")
+$Service.Connect()
+$RootFolder = $Service.GetFolder("\")
+
+$TaskDefinition = $Service.NewTask(0) 
+$TaskDefinition.Settings.Enabled = $true
+$TaskDefinition.Settings.AllowDemandStart = $true
+$TaskDefinition.Settings.AllowHardTerminate = $true
+
+$Action = $TaskDefinition.Actions.Create(0)
+$Action.Path = $ActionPath
+$Action.Arguments = $ActionArguments
+
+$RootFolder.RegisterTaskDefinition($Name,$TaskDefinition,6,$User,$null,3) | Out-Null
+
+($RootFolder.GetTask($Name)).Run($null) | Out-Null
+$RootFolder.DeleteTask($Name,0)
+			</code>
+		</pre>
+	</div>
+</body>
+</html>
