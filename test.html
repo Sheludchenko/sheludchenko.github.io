@@ -3,7 +3,19 @@
 <head>
 	<style type="text/css">
 		body { 
-			margin: 0px; 
+			margin: 0px;
+			margin-top: 50px;
+			font-family: Sans-Serif;
+		}
+		
+		pre {
+			margin-top: 0px;
+		}
+		
+		p {
+			margin-top: 5px;
+			margin-bottom: 0px;
+			font-size: 12pt;
 		}
 		
 		#wrapper {
@@ -11,8 +23,14 @@
 		   left: 50%;
 		   width: 1200px;
 		   margin-left: -600px;
+		   font-size: 14pt;
 		}
 		
+		.post-heading {
+			margin: 0px;
+			padding: 0px;
+			font-weight: normal;
+		}
 	</style>
 	<title>8bit - Test page</title>
 	<link rel="apple-touch-icon" sizes="57x57" href="images/favicon/apple-icon-57x57.png">
@@ -38,8 +56,11 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/languages/powershell.min.js"></script>
 	<script>hljs.initHighlightingOnLoad();</script>
 </head>
-<body style="font-size: 12pt;">
+<body>
 	<div id="wrapper">
+		<h2 class="post-heading">Add and Run Task Scheduler Task</h2>
+		<p>The script takes four arguments.</p>
+		<p>It creates task in windows task scheduler, runs it under defined user. When task is finished it removed.</p>
 		<pre>
 			<code class="language-powershell hljs">
 [CmdletBinding()]
