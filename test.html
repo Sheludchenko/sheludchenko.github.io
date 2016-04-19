@@ -11,11 +11,11 @@
 		pre {
 			margin-top: 0px;
 		}
-		
+				
 		p {
 			margin-top: 5px;
 			margin-bottom: 0px;
-			font-size: 12pt;
+			font-size: 14pt;
 		}
 		
 		#wrapper {
@@ -23,11 +23,16 @@
 		   left: 50%;
 		   width: 80%;
 		   margin-left: -40%;
-		   font-size: 14pt;
+		   font-size: 13pt;
+		}
+		
+		.post {
+			margin-bottom: 5em;
 		}
 		
 		.post-heading {
 			margin: 0px;
+			margin-bottom: 15px;
 			padding: 0px;
 			font-weight: normal;
 		}
@@ -50,50 +55,38 @@
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="msapplication-TileImage" content="images/favicon/ms-icon-144x144.png">
 	<meta name="theme-color" content="#ffffff">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/monokai_sublime.min.css"></link>
-	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/languages/powershell.min.js"></script>
-	<script>hljs.initHighlightingOnLoad();</script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-okaidia.css"></link>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-core.min.js" data-manual></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-powershell.min.js"></script>
+	<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
 </head>
 <body>
 	<div id="wrapper">
-		<h2 class="post-heading">Add and Run Task Scheduler Task</h2>
-		<p>The script takes four arguments.</p>
-		<p>It creates task in windows task scheduler, runs it under defined user. When task is finished it removed.</p>
-		<pre>
-			<code class="language-powershell hljs">
-[CmdletBinding()]
-param(
-	[Parameter(Mandatory=$true)]
-	[string]$Name,
-	[Parameter(Mandatory=$true)]
-	[string]$User,
-	[Parameter(Mandatory=$true)]
-	[string]$ActionPath,
-	[Parameter(Mandatory=$true)]
-	[string]$ActionArguments
-)
-
-$Service = New-Object -ComObject("Schedule.Service")
-$Service.Connect()
-$RootFolder = $Service.GetFolder("\")
-
-$TaskDefinition = $Service.NewTask(0) 
-$TaskDefinition.Settings.Enabled = $true
-$TaskDefinition.Settings.AllowDemandStart = $true
-$TaskDefinition.Settings.AllowHardTerminate = $true
-
-$Action = $TaskDefinition.Actions.Create(0)
-$Action.Path = $ActionPath
-$Action.Arguments = $ActionArguments
-
-$RootFolder.RegisterTaskDefinition($Name,$TaskDefinition,6,$User,$null,3) | Out-Null
-
-($RootFolder.GetTask($Name)).Run($null) | Out-Null
-$RootFolder.DeleteTask($Name,0)
-			</code>
-		</pre>
+		<div class="post">
+			<h2 class="post-heading">Clean Internet Explorer</h2>
+			<p>The script takes one argument.</p>
+			<p>It creates task in windows task scheduler, runs it under defined user. When task is finished it removed.</p>
+			<pre id="CleanInternetExplorer" class="language-powershell"></pre>
+		</div>
+		<div  class="post">
+			<h2 class="post-heading">Add and Run Task Scheduler Task</h2>
+			<p>The script takes four arguments.</p>
+			<p>It creates task in windows task scheduler, runs it under defined user. When task is finished it removed.</p>
+			<pre id="RunScheduledTask" class="language-powershell"></pre>
+		</div>
 	</div>
+	<script>
+		$.get('https://raw.githubusercontent.com/Sheludchenko/powershell/master/Clean-InternetExplorer.ps1', function (data) {
+			$('#CleanInternetExplorer').text(data);
+			Prism.highlightElement($('#CleanInternetExplorer')[0]);
+			console.log(data);
+		});
+		
+		$.get('https://raw.githubusercontent.com/Sheludchenko/powershell/master/Run-ScheduledTask.ps1', function (data) {
+			$('#RunScheduledTask').text(data);
+			Prism.highlightElement($('#RunScheduledTask')[0]);
+			console.log(data);
+		});
+	</script>
 </body>
 </html>
