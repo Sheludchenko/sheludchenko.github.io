@@ -64,6 +64,18 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-powershell.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-batch.min.js"></script>
         <div class="post">
+			<h2 class="post-heading">Create Azure VM from existing Storage Account</h2>
+			<p>Update names according to your naming convetion.</p>
+			<pre id="CreateVMFromExistingStorageAccount" class="language-powershell"></pre>
+		</div>
+        <script async>
+            $.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Create-VMFromExistingStorageAccount.ps1', function (data) {
+                $('#CreateVMFromExistingStorageAccount').text(data);
+                Prism.highlightElement($('#CreateVMFromExistingStorageAccount')[0]);
+                console.log(data);
+            });
+        </script>
+        <div class="post">
 			<h2 class="post-heading">Mirror Git Repository</h2>
 			<p>Replace source and destination URLs.</p>
 			<pre id="MirrorGitRepository" class="language-batch"></pre>
