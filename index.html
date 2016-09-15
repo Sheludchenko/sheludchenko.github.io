@@ -56,9 +56,6 @@
 	<meta name="msapplication-TileImage" content="images/favicon/ms-icon-144x144.png">
 	<meta name="theme-color" content="#ffffff">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-okaidia.min.css"></link>
-	<script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-core.min.js" data-manual></script>
-	<script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-powershell.min.js"></script>
-    <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-batch.min.js"></script>
 </head>
 <body>
 	<div id="wrapper">
@@ -81,7 +78,10 @@
 		</div>
 	</div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
-	<script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-core.min.js" data-manual></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-powershell.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-batch.min.js"></script>
+    <script>
         $.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Mirror-GitRepository.cmd', function (data) {
 			$('#MirrorGitRepository').text(data);
 			Prism.highlightElement($('#MirrorGitRepository')[0]);
