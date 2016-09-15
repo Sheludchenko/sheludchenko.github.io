@@ -1,37 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>8bit</title>
 	<style type="text/css">
 		body { 
-			margin: 0px; 
+			margin: 0px;
+			margin-top: 50px;
+			font-family: Sans-Serif;
 		}
 		
-		#triangles {
+		pre {
+			margin-top: 0px;
+		}
+				
+		p {
+			margin-top: 5px;
+			margin-bottom: 0px;
+			font-size: 18px;
+		}
+		
+		#wrapper {
 		   position: absolute;
-		   top: 50%;
 		   left: 50%;
-		   width: 500px;
-		   height: 500px;
-		   margin-top: -250px;
-		   margin-left: -250px;
+		   width: 80%;
+		   margin-left: -40%;
+		   font-size: 18px;
 		}
 		
-		#alien {
-			width: 256px;
-			height: 256px;
-			
-			position:absolute;
-			left:0; right:0;
-			top:0; bottom:0;
-			margin:auto;
-			
-			max-width:100%;
-			max-height:100%;
-			overflow:auto;
+		.post {
+			margin-bottom: 5em;
 		}
 		
+		.post-heading {
+			margin: 0px;
+			margin-bottom: 15px;
+			padding: 0px;
+			font-weight: normal;
+		}
 	</style>
+	<title>Bytes &amp; Bits</title>
 	<link rel="apple-touch-icon" sizes="57x57" href="images/favicon/apple-icon-57x57.png">
 	<link rel="apple-touch-icon" sizes="60x60" href="images/favicon/apple-icon-60x60.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="images/favicon/apple-icon-72x72.png">
@@ -49,33 +55,50 @@
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="msapplication-TileImage" content="images/favicon/ms-icon-144x144.png">
 	<meta name="theme-color" content="#ffffff">
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.4.0/trianglify.min.js"></script>
-	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		ga('create', 'UA-75264300-1', 'auto');
-		ga('send', 'pageview');
-	</script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/themes/prism-okaidia.min.css"></link>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-core.min.js" data-manual></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-powershell.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-batch.min.js"></script>
+	<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
 </head>
 <body>
-	
-	<div id="triangles">
-		<script type="text/javascript">
-			function resize() { 
-				var something = document.getElementById('triangles');
-				var pattern = Trianglify({
-					width: 512, 
-					height: 512
-				});
-				something.appendChild(pattern.canvas());
-			}
-
-			window.onload = resize;
-		</script>
-		<img id="alien" src="images/bit.png"></img>
+	<div id="wrapper">
+        <div class="post">
+			<h2 class="post-heading">Mirror Git Repository</h2>
+			<p>Replace source and destination URLs.</p>
+			<pre id="MirrorGitRepository" class="language-batch"></pre>
+		</div>
+		<div class="post">
+			<h2 class="post-heading">Clean Internet Explorer</h2>
+			<p>The script takes one argument.</p>
+			<p>It creates task in windows task scheduler, runs it under defined user. When task is finished it removed.</p>
+			<pre id="CleanInternetExplorer" class="language-powershell"></pre>
+		</div>
+		<div  class="post">
+			<h2 class="post-heading">Add and Run Task Scheduler Task</h2>
+			<p>The script takes four arguments.</p>
+			<p>It creates task in windows task scheduler, runs it under defined user. When task is finished it removed.</p>
+			<pre id="RunScheduledTask" class="language-powershell"></pre>
+		</div>
 	</div>
+	<script>
+        $.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Mirror-GitRepository.cmd', function (data) {
+			$('#MirrorGitRepository').text(data);
+			Prism.highlightElement($('#MirrorGitRepository')[0]);
+			console.log(data);
+		});
+        
+		$.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Clean-InternetExplorer.ps1', function (data) {
+			$('#CleanInternetExplorer').text(data);
+			Prism.highlightElement($('#CleanInternetExplorer')[0]);
+			console.log(data);
+		});
+		
+		$.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Run-ScheduledTask.ps1', function (data) {
+			$('#RunScheduledTask').text(data);
+			Prism.highlightElement($('#RunScheduledTask')[0]);
+			console.log(data);
+		});
+	</script>
 </body>
 </html>
