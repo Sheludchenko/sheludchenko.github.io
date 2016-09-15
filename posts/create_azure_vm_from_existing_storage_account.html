@@ -36,12 +36,8 @@
 			padding: 0px;
 			font-weight: normal;
 		}
-        a, a:visited, a:active {
-            color: #000;
-        }
-        
 	</style>
-	<title>Bytes &amp; Bits</title>
+	<title>Bytes &amp; Bits - Create Azure VM from existing Storage Account</title>
 	<link rel="apple-touch-icon" sizes="57x57" href="images/favicon/apple-icon-57x57.png">
 	<link rel="apple-touch-icon" sizes="60x60" href="images/favicon/apple-icon-60x60.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="images/favicon/apple-icon-72x72.png">
@@ -68,7 +64,7 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-powershell.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-batch.min.js"></script>
         <div class="post">
-            <h2 class="post-heading"><a href="posts/create_azure_vm_from_existing_storage_account.html">Create Azure VM from existing Storage Account</a></h2>
+            <h2 class="post-heading">Create Azure VM from existing Storage Account</h2>
 			<p>Update names according to your naming convetion.</p>
 			<pre id="CreateVMFromExistingStorageAccount" class="language-powershell"></pre>
 		</div>
@@ -79,44 +75,6 @@
                 console.log(data);
             });
         </script>
-        <div class="post">
-            <h2 class="post-heading"><a href="posts/create_git_repository_mirror.html">Create Git Repository Mirror</a></h2>
-			<p>Replace source and destination URLs.</p>
-			<pre id="MirrorGitRepository" class="language-batch"></pre>
-		</div>
-        <script async>
-            $.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Mirror-GitRepository.cmd', function (data) {
-                $('#MirrorGitRepository').text(data);
-                Prism.highlightElement($('#MirrorGitRepository')[0]);
-                console.log(data);
-            });
-        </script>
-		<div class="post">
-            <h2 class="post-heading"><a href="posts/clean_internet_explorer.html">Clean Internet Explorer</a></h2>
-			<p>The script takes one argument.</p>
-			<p>It creates task in windows task scheduler, runs it under defined user. When task is finished it removed.</p>
-			<pre id="CleanInternetExplorer" class="language-powershell"></pre>
-		</div>
-        <script async>
-            $.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Clean-InternetExplorer.ps1', function (data) {
-                $('#CleanInternetExplorer').text(data);
-                Prism.highlightElement($('#CleanInternetExplorer')[0]);
-                console.log(data);
-            });
-        </script>
-		<div  class="post">
-            <h2 class="post-heading"><a href="posts/add_and_run_task_scheduler_task.html">Add and Run Task Scheduler Task</a></h2>
-			<p>The script takes four arguments.</p>
-			<p>It creates task in windows task scheduler, runs it under defined user. When task is finished it removed.</p>
-			<pre id="RunScheduledTask" class="language-powershell"></pre>
-		</div>
-        <script async>
-            $.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Run-ScheduledTask.ps1', function (data) {
-                $('#RunScheduledTask').text(data);
-                Prism.highlightElement($('#RunScheduledTask')[0]);
-                console.log(data);
-            });
-	   </script>
 	</div>
 </body>
 </html>
