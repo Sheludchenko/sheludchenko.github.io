@@ -59,46 +59,48 @@
 </head>
 <body>
 	<div id="wrapper">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-core.min.js" data-manual></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-powershell.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-batch.min.js"></script>
         <div class="post">
 			<h2 class="post-heading">Mirror Git Repository</h2>
 			<p>Replace source and destination URLs.</p>
 			<pre id="MirrorGitRepository" class="language-batch"></pre>
 		</div>
+        <script async>
+            $.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Mirror-GitRepository.cmd', function (data) {
+                $('#MirrorGitRepository').text(data);
+                Prism.highlightElement($('#MirrorGitRepository')[0]);
+                console.log(data);
+            });
+        </script>
 		<div class="post">
 			<h2 class="post-heading">Clean Internet Explorer</h2>
 			<p>The script takes one argument.</p>
 			<p>It creates task in windows task scheduler, runs it under defined user. When task is finished it removed.</p>
 			<pre id="CleanInternetExplorer" class="language-powershell"></pre>
 		</div>
+        <script async>
+            $.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Clean-InternetExplorer.ps1', function (data) {
+                $('#CleanInternetExplorer').text(data);
+                Prism.highlightElement($('#CleanInternetExplorer')[0]);
+                console.log(data);
+            });
+        </script>
 		<div  class="post">
 			<h2 class="post-heading">Add and Run Task Scheduler Task</h2>
 			<p>The script takes four arguments.</p>
 			<p>It creates task in windows task scheduler, runs it under defined user. When task is finished it removed.</p>
 			<pre id="RunScheduledTask" class="language-powershell"></pre>
 		</div>
+        <script async>
+            $.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Run-ScheduledTask.ps1', function (data) {
+                $('#RunScheduledTask').text(data);
+                Prism.highlightElement($('#RunScheduledTask')[0]);
+                console.log(data);
+            });
+	   </script>
 	</div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-core.min.js" data-manual></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-powershell.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-batch.min.js"></script>
-    <script>
-        $.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Mirror-GitRepository.cmd', function (data) {
-			$('#MirrorGitRepository').text(data);
-			Prism.highlightElement($('#MirrorGitRepository')[0]);
-			console.log(data);
-		});
-        
-		$.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Clean-InternetExplorer.ps1', function (data) {
-			$('#CleanInternetExplorer').text(data);
-			Prism.highlightElement($('#CleanInternetExplorer')[0]);
-			console.log(data);
-		});
-		
-		$.get('https://raw.githubusercontent.com/Sheludchenko/sheludchenko.github.io/master/data/Run-ScheduledTask.ps1', function (data) {
-			$('#RunScheduledTask').text(data);
-			Prism.highlightElement($('#RunScheduledTask')[0]);
-			console.log(data);
-		});
-	</script>
 </body>
 </html>
