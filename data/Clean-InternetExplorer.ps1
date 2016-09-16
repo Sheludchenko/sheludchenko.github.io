@@ -1,13 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
-    [string]$Name,
-    [Parameter(Mandatory=$true)]
-    [string]$User,
-    [Parameter(Mandatory=$true)]
-    [string]$ActionPath,
-    [Parameter(Mandatory=$true)]
-    [string]$ActionArguments
+    [string]$User
 )
 
 $Service = New-Object -ComObject("Schedule.Service")
@@ -20,10 +14,10 @@ $TaskDefinition.Settings.AllowDemandStart = $true
 $TaskDefinition.Settings.AllowHardTerminate = $true
 
 $Action = $TaskDefinition.Actions.Create(0)
-$Action.Path = $ActionPath
-$Action.Arguments = $ActionArguments
+$Action.Path = "RunDll32.exe"
+$Action.Arguments = " InetCpl.cpl, ClearMyTracksByProcess 255"
 
-$RootFolder.RegisterTaskDefinition($Name,$TaskDefinition,6,$User,$null,3) | Out-Null
+$RootFolder.RegisterTaskDefinition("CleanInternetExplorer",$TaskDefinition,6,$User,$null,3) | Out-Null
 
-($RootFolder.GetTask($Name)).Run($null) | Out-Null
-$RootFolder.DeleteTask($Name,0)
+($RootFolder.GetTask("CleanInternetExplorer")).Run($null) | Out-Null
+$RootFolder.DeleteTask("CleanInternetExplorer",0)
