@@ -44,7 +44,7 @@ function build() {
     Remove-Item ".\index*" -Force -Confirm:$false
     Remove-Item ".\posts\*" -Force -Confirm:$false
 
-    $posts = Get-ChildItem ".\src\posts" -Filter "*.md"
+    $posts = Get-ChildItem ".\src\posts" -Filter "*.md" | Sort-Object -Descending
     $postscount = ($posts | Measure-Object).Count
     $postnumber = 1
     $pagenumber = 1

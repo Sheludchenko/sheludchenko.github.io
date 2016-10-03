@@ -1,7 +1,0 @@
-# Post Six #
-
-Text
-
-```
-Code
-```

@@ -1,7 +1,0 @@
-# Post Two #
-
-Text
-
-```
-Code
-```

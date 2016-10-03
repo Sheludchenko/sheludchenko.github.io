@@ -1,7 +1,0 @@
-# Post Seven #
-
-Text
-
-```
-Code
-```

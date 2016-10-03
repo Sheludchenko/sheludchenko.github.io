@@ -1,7 +1,0 @@
-# Post Three #
-
-Text
-
-```
-Code
-```
