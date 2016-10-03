@@ -29,9 +29,10 @@ function init() {
 
 function preparepost($post) {
     
-    $postfile = "$(($post.Name.Split("-")[1]).Replace("md","html"))"
-    $postname = ($post.Name.Split("-")[1]).Replace(".md","").Replace("_"," ")
-    $preparedpost = "<div class=""post""><a href=""posts/$postfile""><h1 class=""post-heading"">$postname</h1></a>$([CommonMark.CommonMarkConverter]::Convert($(Get-Content $post.FullName -Raw)))</div>"
+    $postfile = "$(($post.Name.Split("-")[2]).Replace("md","html"))"
+    $postname = ($post.Name.Split("-")[2]).Replace(".md","").Replace("_"," ")
+    $scriptlanguage = $post.Name.Split("-")[1]
+    $preparedpost = "<div class=""post""><a href=""posts/$postfile""><h1 class=""post-heading"">$postname</h1></a><section class=""language-$scriptlanguage"">$([CommonMark.CommonMarkConverter]::Convert($(Get-Content $post.FullName -Raw)))</section></div>"
     $savepost = (Get-Content $posttemplate).Replace("<!--content-->", $preparedpost) | Set-Content ".\posts\$postfile" -Force -Confirm:$false
     
     return $preparedpost
