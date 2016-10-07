@@ -75,8 +75,34 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-core.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-powershell.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-batch.min.js"></script>
+		
+		
+		<div class="post"><a href="posts/Rewrite_domain_to_subfolder.html"><h1 class="post-heading">Rewrite domain to subfolder</h1></a><section class="language-xml"><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;configuration&gt;
+    &lt;system.webServer&gt;
+        &lt;rewrite&gt;
+            &lt;rules&gt;
+                &lt;rule name=&quot;Virtual Directory Rewrite&quot;&gt;
+                    &lt;match url=&quot;.*&quot; /&gt;
+                    &lt;conditions&gt;
+                        &lt;add input=&quot;{SUBDOMAINS:{HTTP_HOST}}&quot; pattern=&quot;(.+)&quot; /&gt;
+                    &lt;/conditions&gt;
+                    &lt;action type=&quot;Rewrite&quot; url=&quot;{C:1}{REQUEST_URI}&quot; appendQueryString=&quot;false&quot; /&gt;
+                &lt;/rule&gt;
+            &lt;/rules&gt;
+            &lt;rewriteMaps&gt;
+                &lt;rewriteMap name=&quot;SUBDOMAINS&quot;&gt;
+                    &lt;add key=&quot;one.com&quot; value=&quot;one&quot; /&gt;
+                    &lt;add key=&quot;two.com&quot; value=&quot;two&quot; /&gt;
+					&lt;add key=&quot;three.com&quot; value=&quot;three&quot; /&gt;
+                &lt;/rewriteMap&gt;
+            &lt;/rewriteMaps&gt;
+        &lt;/rewrite&gt;
+    &lt;/system.webServer&gt;
+&lt;/configuration&gt;
+</code></pre>
 
-		<div class="post"><a href="posts/Create_Azure_VM_from_existing_Storage_Account.html"><h1 class="post-heading">Create Azure VM from existing Storage Account</h1></a><section class="language-powershell"><pre><code>[CmdletBinding()]
+</section></div><div class="post"><a href="posts/Create_Azure_VM_from_existing_Storage_Account.html"><h1 class="post-heading">Create Azure VM from existing Storage Account</h1></a><section class="language-powershell"><pre><code>[CmdletBinding()]
 param(
     [Parameter(Mandatory=$false)]
     [string]$ResourceGroup,
@@ -231,7 +257,7 @@ $RootFolder.DeleteTask($Name,0)
 
 </section></div>
 		
-		<h1><a href="<!--prevpage-->">Prev</a>...<a href="<!--nextpage-->">Next</a></h1>
+		<h1><a href="<!--prevpage-->"Prev</a>...<a href="<!--nextpage-->">Next</a></h1>
 	</div>
 </body>
 </html>
