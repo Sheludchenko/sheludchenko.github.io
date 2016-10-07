@@ -75,9 +75,26 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-core.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-powershell.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.4.1/components/prism-batch.min.js"></script>
-		
-		
-		<div class="post"><a href="posts/Rewrite_domain_to_subfolder.html"><h1 class="post-heading">Rewrite domain to subfolder</h1></a><section class="language-xml"><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+		<div class="post"><a href="posts/Generate_version_for_Jenkins_project.html"><h1 class="post-heading">Generate version for Jenkins project</h1></a><section class="language-xml"><pre><code>def majorVersion = 1
+def minorVersion = 1
+
+def currentBuild = Thread.currentThread().executable
+def scmChanges = 0
+currentBuild.parent.getSCMs().scmName.each {
+    def process = ['cmd', '/C', &quot;\&quot;cd ${currentBuild.workspace}\\${it == null ? &quot;&quot; : it} &amp; git log --pretty=oneline | find /c /v \&quot;\&quot;\&quot;&quot;].execute()
+    process.waitFor()
+    scmChanges += process.in.text.tokenize(&quot;\n&quot;)[0].toInteger()
+}
+def previousBuild = currentBuild.previousBuild
+def previousBuildVersion = previousBuild != null ? previousBuild.environment[&quot;VERSION&quot;] : &quot;NULL&quot;
+def previousBuildAttempt = previousBuild != null ? previousBuild.environment[&quot;BUILD_ATTEMPT&quot;] : -1
+def buildVersion = &quot;${majorVersion}.${minorVersion}.${String.format( &quot;%d%02d&quot;,new Date().month + 1 ,new Date().date )}.${scmChanges}&quot;
+def buildAttempt = previousBuildVersion == &quot;${buildVersion}${previousBuildAttempt}&quot; ? previousBuildAttempt.toInteger() + 1 : 0
+return [VERSION: &quot;${buildVersion}${buildAttempt}&quot;, BUILD_ATTEMPT: buildAttempt]
+</code></pre>
+
+</section></div><div class="post"><a href="posts/Rewrite_domain_to_subfolder.html"><h1 class="post-heading">Rewrite domain to subfolder</h1></a><section class="language-xml"><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;configuration&gt;
     &lt;system.webServer&gt;
         &lt;rewrite&gt;
@@ -224,40 +241,9 @@ $RootFolder.RegisterTaskDefinition($Name,$TaskDefinition,6,$User,$null,3) | Out-
 $RootFolder.DeleteTask($Name,0)
 </code></pre>
 
-</section></div><div class="post"><a href="posts/Add_and_run_task_scheduler_task.html"><h1 class="post-heading">Add and run task scheduler task</h1></a><section class="language-powershell"><pre><code>[CmdletBinding()]
-param(
-    [Parameter(Mandatory=$true)]
-    [string]$Name,
-    [Parameter(Mandatory=$true)]
-    [string]$User,
-    [Parameter(Mandatory=$true)]
-    [string]$ActionPath,
-    [Parameter(Mandatory=$true)]
-    [string]$ActionArguments
-)
-
-$Service = New-Object -ComObject(&quot;Schedule.Service&quot;)
-$Service.Connect()
-$RootFolder = $Service.GetFolder(&quot;\&quot;)
-
-$TaskDefinition = $Service.NewTask(0) 
-$TaskDefinition.Settings.Enabled = $true
-$TaskDefinition.Settings.AllowDemandStart = $true
-$TaskDefinition.Settings.AllowHardTerminate = $true
-
-$Action = $TaskDefinition.Actions.Create(0)
-$Action.Path = $ActionPath
-$Action.Arguments = $ActionArguments
-
-$RootFolder.RegisterTaskDefinition($Name,$TaskDefinition,6,$User,$null,3) | Out-Null
-
-($RootFolder.GetTask($Name)).Run($null) | Out-Null
-$RootFolder.DeleteTask($Name,0)
-</code></pre>
-
 </section></div>
 		
-		<h1><a href="<!--prevpage-->"Prev</a>...<a href="<!--nextpage-->">Next</a></h1>
+		<h1><a href="<!--prevpage-->">Prev</a>...<a href="index2.html">Next</a></h1>
 	</div>
 </body>
 </html>
