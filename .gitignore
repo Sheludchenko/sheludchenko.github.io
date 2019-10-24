@@ -1,4 +1,6 @@
 .vs/
+tools/
+wwwroot/
 output/
 config.wyam.hash
 config.wyam.dll

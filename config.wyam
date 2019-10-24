@@ -1,5 +1,4 @@
 #recipe Blog
-#theme Aaa
 
 // Settings
 Settings[Keys.Host] = "by.te.ua";
