@@ -7,15 +7,12 @@ var target = Argument("target", "Preview");
 Task("Clean")
     .Does(() =>
     {
-        try {
-            DeleteDirectory("output", new DeleteDirectorySettings {
-                Recursive = true,
-                Force = true
-            });
-        } catch (IOException ex) {
-            Verbose(ex.Message);
-        }
-        DeleteFiles(GetFiles("./config.wyam.*"));
+        Func<IFileSystemInfo, bool> exlude_src = fileSystemInfo => !fileSystemInfo.Path.FullPath.Contains("src");
+		DeleteDirectories(GetDirectories("../*", new GlobberSettings { Predicate = exlude_src }), new DeleteDirectorySettings {
+			Recursive = true,
+			Force = true
+        });
+		DeleteFiles(GetFiles("../*", new GlobberSettings { FilePredicate = exlude_gitignore }));
     });
 
 Task("Build")
@@ -24,15 +21,10 @@ Task("Build")
     {
         Wyam(new WyamSettings
         {
+            NoClean = true,
+			OutputPath = "../",
             UpdatePackages = true
         });
-    });
-
-Task("Deploy")
-    .IsDependentOn("Build")
-    .Does(() =>
-    {
-        
     });
 
 Task("Preview")
