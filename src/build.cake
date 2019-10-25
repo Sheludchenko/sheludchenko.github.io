@@ -1,6 +1,5 @@
 #tool nuget:?package=Wyam&version=2.2.9
 #addin nuget:?package=Cake.Wyam&version=2.2.9
-#addin nuget:?package=Cake.Git&version=0.21.0
 
 var target = Argument("target", "Preview");
 
@@ -14,12 +13,12 @@ Task("Clean")
 			Force = true
         });
 
-        string[] excludedFiles = {".gitignore"};
+        string[] excludedFiles = {".gitignore","readme.md"};
         Func<IFileSystemInfo, bool>	excludeFiles = fileSystemInfo => !excludedFiles.Contains(fileSystemInfo.Path.Segments[fileSystemInfo.Path.Segments.Length - 1]);
 		DeleteFiles(GetFiles("../*", new GlobberSettings { FilePredicate = excludeFiles }));
     });
 
-Task("Build")
+Task("Publish")
     .IsDependentOn("Clean")
     .Does(() =>
     {

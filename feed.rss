@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+	<channel>
+		<title>Bits &amp; Bytes</title>
+		<link>http://by.te.ua/</link>
+		<description>Welcome!</description>
+		<copyright>2019</copyright>
+		<pubDate>Fri, 25 Oct 2019 08:11:22 GMT</pubDate>
+		<lastBuildDate>Fri, 25 Oct 2019 08:11:22 GMT</lastBuildDate>
+		<item>
+			<title>Git cheatsheet</title>
+			<link>http://by.te.ua/posts/git-cheatsheet</link>
+			<description>&lt;p&gt;Update existing commit&lt;/p&gt;</description>
+			<guid>http://by.te.ua/posts/git-cheatsheet</guid>
+			<pubDate>Thu, 24 Oct 2019 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;Update existing commit&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git commit --amend --no-edit
+git push --force 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Remove all local changes&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clean -fdx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Mirror repositories&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone --mirror [source.repository]
+cd source.repository.git
+git push --mirror [target.repository]
+&lt;/code&gt;&lt;/pre&gt;
+</content:encoded>
+		</item>
+	</channel>
+</rss>
