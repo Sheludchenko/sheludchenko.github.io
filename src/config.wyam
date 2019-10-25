@@ -1,0 +1,9 @@
+#recipe Blog
+
+// Settings
+Settings[Keys.Host] = "by.te.ua";
+Settings[BlogKeys.Title] = "Bits & Bytes";
+Settings[BlogKeys.Description] = "Welcome!";
+Settings[BlogKeys.IndexPageSize] = 5;
+
+// Pipeline customizations
