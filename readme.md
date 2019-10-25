@@ -1,12 +1,8 @@
 # Readme
 
-### Build
+### Publish
 
-    build.ps1 -Target Build
-
-### Deploy
-
-    build.ps1 -Target Deploy
+    build.ps1 -Target Publish
 
 ### Preview
 
