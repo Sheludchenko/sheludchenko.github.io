@@ -7,12 +7,16 @@ var target = Argument("target", "Preview");
 Task("Clean")
     .Does(() =>
     {
-        Func<IFileSystemInfo, bool> exlude_src = fileSystemInfo => !fileSystemInfo.Path.FullPath.Contains("src");
-		DeleteDirectories(GetDirectories("../*", new GlobberSettings { Predicate = exlude_src }), new DeleteDirectorySettings {
+        string[] excludedDirectories = {".git","src"};
+        Func<IFileSystemInfo, bool> excludeDirectories = fileSystemInfo => !excludedDirectories.Contains(fileSystemInfo.Path.Segments[fileSystemInfo.Path.Segments.Length - 1]);
+        DeleteDirectories(GetDirectories("../*", new GlobberSettings { Predicate = excludeDirectories }), new DeleteDirectorySettings {
 			Recursive = true,
 			Force = true
         });
-		DeleteFiles(GetFiles("../*", new GlobberSettings { FilePredicate = exlude_gitignore }));
+
+        string[] excludedFiles = {".gitignore"};
+        Func<IFileSystemInfo, bool>	excludeFiles = fileSystemInfo => !excludedFiles.Contains(fileSystemInfo.Path.Segments[fileSystemInfo.Path.Segments.Length - 1]);
+		DeleteFiles(GetFiles("../*", new GlobberSettings { FilePredicate = excludeFiles }));
     });
 
 Task("Build")
