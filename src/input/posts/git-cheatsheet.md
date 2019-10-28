@@ -1,5 +1,5 @@
 Title: Git cheatsheet
-Published: 10/24/2019
+Published: 10/28/2019
 Tags:
     - Git
     - Cheatsheet
@@ -18,3 +18,7 @@ Mirror repositories
     git clone --mirror [source.repository]
     cd source.repository.git
     git push --mirror [target.repository]
+	
+Update submodules
+
+    git submodule update --init

@@ -5,14 +5,14 @@
 		<link>http://by.te.ua/</link>
 		<description>Welcome!</description>
 		<copyright>2019</copyright>
-		<pubDate>Fri, 25 Oct 2019 08:11:22 GMT</pubDate>
-		<lastBuildDate>Fri, 25 Oct 2019 08:11:22 GMT</lastBuildDate>
+		<pubDate>Mon, 28 Oct 2019 10:37:13 GMT</pubDate>
+		<lastBuildDate>Mon, 28 Oct 2019 10:37:13 GMT</lastBuildDate>
 		<item>
 			<title>Git cheatsheet</title>
 			<link>http://by.te.ua/posts/git-cheatsheet</link>
 			<description>&lt;p&gt;Update existing commit&lt;/p&gt;</description>
 			<guid>http://by.te.ua/posts/git-cheatsheet</guid>
-			<pubDate>Thu, 24 Oct 2019 00:00:00 GMT</pubDate>
+			<pubDate>Mon, 28 Oct 2019 00:00:00 GMT</pubDate>
 			<content:encoded>&lt;p&gt;Update existing commit&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;git commit --amend --no-edit
 git push --force 
@@ -24,6 +24,9 @@ git push --force
 &lt;pre&gt;&lt;code&gt;git clone --mirror [source.repository]
 cd source.repository.git
 git push --mirror [target.repository]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Update submodules&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git submodule update --init
 &lt;/code&gt;&lt;/pre&gt;
 </content:encoded>
 		</item>
