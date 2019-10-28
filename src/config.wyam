@@ -3,7 +3,9 @@
 // Settings
 Settings[Keys.Host] = "by.te.ua";
 Settings[BlogKeys.Title] = "Bits & Bytes";
-Settings[BlogKeys.Description] = "Welcome!";
+Settings[BlogKeys.Description] = "";
 Settings[BlogKeys.IndexPageSize] = 5;
+Settings[BlogKeys.CaseInsensitiveTags] = true;
+Settings[BlogKeys.IndexFullPosts] = true;
 
 // Pipeline customizations

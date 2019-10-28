@@ -14,7 +14,7 @@
 		<!--[if lte IE 9]><link rel="stylesheet" href="/assets/css/ie9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="/assets/css/ie8.css" /><![endif]-->
 
-		<meta name="description" content="Welcome!" />
+		<meta name="description" content="" />
 		<link type="application/rss+xml" rel="alternate" title="Bits &amp; Bytes" href="/feed.rss" />
 				<link type="application/atom+xml" rel="alternate" title="Bits &amp; Bytes" href="/feed.atom" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
@@ -41,7 +41,7 @@
 			<!-- Header -->
 
     <header id="header">
-        <h1>Welcome!</h1>
+        <h1></h1>
     </header>
 
 			<!-- Nav -->
@@ -70,15 +70,30 @@
                         </header>
                     </a>
                     <p>Posted on Monday, October 28, 2019</p>
-<p>Update existing commit</p>                </div>       
+<p>Update existing commit</p>
+<pre><code>git commit --amend --no-edit
+git push --force 
+</code></pre>
+<p>Remove all local changes</p>
+<pre><code>git clean -fdx
+</code></pre>
+<p>Mirror repositories</p>
+<pre><code>git clone --mirror [source.repository]
+cd source.repository.git
+git push --mirror [target.repository]
+</code></pre>
+<p>Update submodules</p>
+<pre><code>git submodule update --init
+</code></pre>
+                </div>       
             <ul class="actions">            
                             </ul>
     </div>
     <div class="4u 12u$(medium)">
         <h5>Tags</h5>
         <ul class="icons">
-                <li><a href="/tags/Git.html">Git (1)</a></li>
                 <li><a href="/tags/Cheatsheet.html">Cheatsheet (1)</a></li>
+                <li><a href="/tags/Git.html">Git (1)</a></li>
         </ul>
         <ul class="actions small">
             <li><a href="/tags" class="button small">View All Tags &rarr;</a></li>
