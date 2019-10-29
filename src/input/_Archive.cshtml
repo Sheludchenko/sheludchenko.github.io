@@ -3,35 +3,31 @@ Title: Archive
 @{
     Layout = "/_Layout.cshtml";
 }
- 
- <div class="content">
+
 @{
-    foreach(IGrouping<int, IDocument> year in Model.DocumentList(Keys.PageDocuments)
+    foreach(IGrouping<int, IDocument> group in Model.DocumentList(Keys.PageDocuments)
         .Where(x => x.ContainsKey(BlogKeys.Published))
         .OrderByDescending(x => x.Get<DateTime>(BlogKeys.Published))
         .GroupBy(x => x.Get<DateTime>(BlogKeys.Published).Year)
         .OrderByDescending(x => x.Key))
     {
-        <header class="major">
-            <h2>@year.Key</h2>
-        </header>
-        @Html.Partial("_PostList", year);
+        <h1>@group.Key</h1>
+        <hr />
+        @Html.Partial("_PostList", group);
     }
-    
-    <ul class="actions">            
-        @if(Model.Bool(Keys.HasPreviousPage))
-        {
-            <li>    
-                <a href="@(Context.GetLink(Model.Document(Keys.PreviousPage)))" class="button"><span aria-hidden="true">&larr;</span> Newer</a>
-                         
-            </li>
-        } 
-        @if(Model.Bool(Keys.HasNextPage))
-        {
-            <li>
-                <a href="@(Context.GetLink(Model.Document(Keys.NextPage)))" class="button">Older <span aria-hidden="true">&rarr;</span></a>
-            </li>
-        }
+
+    <ul class="pager">
+        <li class="previous">                
+            @if(Model.Bool(Keys.HasPreviousPage))
+            {
+                <a href="@(Context.GetLink(Model.Document(Keys.PreviousPage)))"><span aria-hidden="true">&larr;</span> Newer</a>
+            }                
+        </li>
+        <li class="next">
+            @if(Model.Bool(Keys.HasNextPage))
+            {
+                <a href="@(Context.GetLink(Model.Document(Keys.NextPage)))">Older <span aria-hidden="true">&rarr;</span></a>
+            }
+        </li>
     </ul>
 }
-</div>

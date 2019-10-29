@@ -1,5 +1,5 @@
 Title: Git cheatsheet
-Published: 10/28/2019
+Published: 10/29/2019
 Tags:
     - Git
     - Cheatsheet
@@ -21,4 +21,4 @@ Mirror repositories
 	
 Update submodules
 
-    git submodule update --init
+    git submodule update --init --recursive --progress

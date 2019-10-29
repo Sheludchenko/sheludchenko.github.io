@@ -7,5 +7,10 @@ Settings[BlogKeys.Description] = "";
 Settings[BlogKeys.IndexPageSize] = 5;
 Settings[BlogKeys.CaseInsensitiveTags] = true;
 Settings[BlogKeys.IndexFullPosts] = true;
+Settings[BlogKeys.AtomPath] = null;
+Settings[BlogKeys.RdfPath] = null;
+Settings[BlogKeys.RssPath] = null;
+
+
 
 // Pipeline customizations

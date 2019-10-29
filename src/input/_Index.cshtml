@@ -3,82 +3,69 @@
 }
 
 <div class="row">
-    <div class="8u 12u$(medium)">
+    <div class="col-sm-8 right-border">
         @{
-            foreach(IDocument doc in Model.DocumentList(Keys.PageDocuments))
+            bool first = true;
+            foreach(IDocument post in Model.DocumentList(Keys.PageDocuments))
             {                
-                string lead = doc.String(BlogKeys.Lead);
-                <div class="content">
-                    <a href="@Context.GetLink(doc)">
-                        <header class="major">
-                            <h2>@doc.String(BlogKeys.Title)</h2>                                
-                            @if(!string.IsNullOrWhiteSpace(lead))
-                            {
-                                <h3>@lead</h3>
-                            }
-                        </header>
+                if (!first)
+                {
+                    <hr /> 
+                }
+                first = false;
+                string lead = post.String(BlogKeys.Lead);
+                <div class="post-preview">
+                    <a href="@Context.GetLink(post)">
+                        <h2 class="post-title">@post.WithoutSettings.String(BlogKeys.Title)</h2>
+                        @if(!string.IsNullOrWhiteSpace(lead))
+                        {
+                            <h3 class="post-subtitle">@lead</h3>
+                        }
                     </a>
-                    <p>Posted on @(doc.Get<DateTime>(BlogKeys.Published).ToLongDateString())</p>
+                    <p class="post-meta">Posted on @(post.Get<DateTime>(BlogKeys.Published).ToLongDateString(Context))</p>
                     @if(Context.Bool(BlogKeys.IndexFullPosts))
                     {
-                        @Html.Raw(doc.Content)
+                        @Html.Raw(post.Content)
                     }
                     else
                     {
-                        @Html.Raw(doc.String(BlogKeys.Excerpt))
-                    }            
+                        @Html.Raw(post.String(BlogKeys.Excerpt))
+                    }             
                 </div>       
             }
-            <ul class="actions">            
+        }
+        <ul class="pager">
+            <li class="previous">                
                 @if(Model.Bool(Keys.HasPreviousPage))
                 {
-                    <li>
-                        <a href="@(Context.GetLink(Model.Document(Keys.PreviousPage)))" class="button"><span aria-hidden="true">&larr;</span> Newer</a>
-                    </li>
-                }  
+                    <a href="@(Context.GetLink(Model.Document(Keys.PreviousPage)))"><span aria-hidden="true">&larr;</span> Newer</a>
+                }                
+            </li>
+            <li class="next">
                 @if(Model.Bool(Keys.HasNextPage))
                 {
-                    <li>
-                        <a href="@(Context.GetLink(Model.Document(Keys.NextPage)))" class="button">Older <span aria-hidden="true">&rarr;</span></a>
-                    </li>
+                    <a href="@(Context.GetLink(Model.Document(Keys.NextPage)))">Older <span aria-hidden="true">&rarr;</span></a>
                 }
-            </ul>
-        }
+            </li>
+        </ul>
     </div>
-    <div class="4u 12u$(medium)">
-        <h5>Tags</h5>
-        <ul class="icons">
-            @foreach (IDocument tagDocument in Documents[Blog.Tags]
-                .GroupBy(x => x.String(BlogKeys.Tag)).Select(x => x.Where(p => p.Get<int>(Keys.CurrentPage) == 1).First())
-                .OrderByDescending(x => x.Get<int>(Keys.TotalItems)).Take(10))
-            {
-                string tag = tagDocument.String(BlogKeys.Tag);
-                string postCount = tagDocument.String(Keys.TotalItems);
-                <li><a href="@(Context.GetLink(tagDocument)).html">@tag (@postCount)</a></li>
-            }
-        </ul>
-        <ul class="actions small">
-            <li><a href="@Context.GetLink("tags/index.html")" class="button small">View All Tags &rarr;</a></li>
-        </ul>
+    <div class="col-sm-4 sidebar">
+        <hr class="visible-xs-block" />
 
-        
-        @if(!Context.Bool(BlogKeys.IndexPaging))
+        @if(Documents[Blog.Tags].Any())
         {
-            <h5>Older Posts</h5>
-            <ul>
-                @foreach(IDocument post in Documents[Blog.BlogPosts].Skip(Model.DocumentList(Keys.PageDocuments).Count).Take(4))
-                {        
-                    <li><a href="@Context.GetLink(post)">@post.String(BlogKeys.Title)</a></li>
+            <div>
+                @foreach (IDocument tagDocument in Documents[Blog.Tags]
+                    .GroupBy(x => x.String(BlogKeys.Tag)).Select(x => x.Where(p => p.Get<int>(Keys.CurrentPage) == 1).First())
+                    .OrderByDescending(x => x.Get<int>(Keys.TotalItems)).Take(1000))
+                {
+                    string tag = tagDocument.String(BlogKeys.Tag);
+                    string postCount = tagDocument.String(Keys.TotalItems);
+                    <a role="button" href="@Context.GetLink(tagDocument)" class="btn btn-default btn-sm"> @tag (@postCount)</a>
                 }
-            </ul>
-            @if(Context.Bool(BlogKeys.GenerateArchive))
-            {
-                <ul class="actions small">
-                    <li><a href="@Context.GetLink(Context.String(BlogKeys.PostsPath))" class="button small">Archive &rarr;</a></li>
-                </ul>
-            }
+            </div>
         }
-
+		
         @Html.Partial("_Sidebar")
     </div> 
 </div>
