@@ -22,3 +22,8 @@ Mirror repositories
 Update submodules
 
     git submodule update --init --recursive --progress
+	
+Remove last commit
+
+    git reset --soft HEAD~1
+	git reset --hard HEAD~1
