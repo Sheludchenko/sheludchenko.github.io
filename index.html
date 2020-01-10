@@ -95,6 +95,18 @@
 <div class="row">
     <div class="col-sm-8 right-border">
                 <div class="post-preview">
+                    <a href="/posts/find-azure-resource">
+                        <h2 class="post-title">Find Azure resource across all subscriptions</h2>
+                    </a>
+                    <p class="post-meta">Posted on Friday, January 10, 2020</p>
+<pre><code>Get-AzSubscription | % {
+  Select-AzSubscription $_
+  Get-AzResource | Where-Object {$_.Name -match &quot;&lt;resource name&gt;&quot;} | Select-Object *
+}
+</code></pre>
+                </div>       
+                    <hr /> 
+                <div class="post-preview">
                     <a href="/posts/load-azure-powershell-on-the-fly">
                         <h2 class="post-title">Load Azure PowersShell on the fly</h2>
                     </a>
@@ -231,12 +243,12 @@ git reset --hard HEAD~1
         <hr class="visible-xs-block" />
 
             <div>
-                    <a role="button" href="/tags/NuGet" class="btn btn-default btn-sm"> NuGet (1)</a>
-                    <a role="button" href="/tags/Git" class="btn btn-default btn-sm"> Git (1)</a>
-                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (1)</a>
-                    <a role="button" href="/tags/Azure" class="btn btn-default btn-sm"> Azure (1)</a>
+                    <a role="button" href="/tags/Azure" class="btn btn-default btn-sm"> Azure (2)</a>
+                    <a role="button" href="/tags/Powershell" class="btn btn-default btn-sm"> Powershell (2)</a>
                     <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
-                    <a role="button" href="/tags/Powershell" class="btn btn-default btn-sm"> Powershell (1)</a>
+                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (1)</a>
+                    <a role="button" href="/tags/Git" class="btn btn-default btn-sm"> Git (1)</a>
+                    <a role="button" href="/tags/NuGet" class="btn btn-default btn-sm"> NuGet (1)</a>
             </div>
 		
         
@@ -255,7 +267,7 @@ git reset --hard HEAD~1
         <div class="row">
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted">
-                        Copyright © 2019
+                        Copyright © 2020
                         <br />
                         
                         <br />
