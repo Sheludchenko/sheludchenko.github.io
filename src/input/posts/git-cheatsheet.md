@@ -15,9 +15,9 @@ Remove all local changes
 
 Mirror repositories
 
-    git clone --mirror [source.repository]
+    git clone --mirror <source.repository>
     cd source.repository.git
-    git push --mirror [target.repository]
+    git push --mirror <target.repository>
 	
 Update submodules
 
@@ -26,4 +26,8 @@ Update submodules
 Remove last commit
 
     git reset --soft HEAD~1
-	git reset --hard HEAD~1
+    git reset --hard HEAD~1
+  
+Reset file
+
+    git checkout -- <path>

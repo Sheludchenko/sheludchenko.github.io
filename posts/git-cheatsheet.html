@@ -108,9 +108,9 @@ git push --force
 <pre><code>git clean -fdx
 </code></pre>
 <p>Mirror repositories</p>
-<pre><code>git clone --mirror [source.repository]
+<pre><code>git clone --mirror &lt;source.repository&gt;
 cd source.repository.git
-git push --mirror [target.repository]
+git push --mirror &lt;target.repository&gt;
 </code></pre>
 <p>Update submodules</p>
 <pre><code>git submodule update --init --recursive --progress
@@ -118,6 +118,9 @@ git push --mirror [target.repository]
 <p>Remove last commit</p>
 <pre><code>git reset --soft HEAD~1
 git reset --hard HEAD~1
+</code></pre>
+<p>Reset file</p>
+<pre><code>git checkout -- &lt;path&gt;
 </code></pre>
 
 

@@ -228,9 +228,9 @@ git push --force
 <pre><code>git clean -fdx
 </code></pre>
 <p>Mirror repositories</p>
-<pre><code>git clone --mirror [source.repository]
+<pre><code>git clone --mirror &lt;source.repository&gt;
 cd source.repository.git
-git push --mirror [target.repository]
+git push --mirror &lt;target.repository&gt;
 </code></pre>
 <p>Update submodules</p>
 <pre><code>git submodule update --init --recursive --progress
@@ -238,6 +238,9 @@ git push --mirror [target.repository]
 <p>Remove last commit</p>
 <pre><code>git reset --soft HEAD~1
 git reset --hard HEAD~1
+</code></pre>
+<p>Reset file</p>
+<pre><code>git checkout -- &lt;path&gt;
 </code></pre>
                 </div>       
         <ul class="pager">
@@ -251,11 +254,11 @@ git reset --hard HEAD~1
         <hr class="visible-xs-block" />
 
             <div>
-                    <a role="button" href="/tags/Git" class="btn btn-default btn-sm"> Git (2)</a>
                     <a role="button" href="/tags/Powershell" class="btn btn-default btn-sm"> Powershell (2)</a>
                     <a role="button" href="/tags/Azure" class="btn btn-default btn-sm"> Azure (2)</a>
-                    <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
+                    <a role="button" href="/tags/Git" class="btn btn-default btn-sm"> Git (2)</a>
                     <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (1)</a>
+                    <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
                     <a role="button" href="/tags/NuGet" class="btn btn-default btn-sm"> NuGet (1)</a>
             </div>
 		
