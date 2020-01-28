@@ -14,7 +14,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Bits &amp; Bytes - Azure</title>
+        <title>Bits &amp; Bytes - Kudu zip deployment</title>
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -35,9 +35,9 @@
         <meta name="msapplication-tooltip" content="Bits &amp; Bytes" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Bits &amp; Bytes - Azure" />
+        <meta property="og:title" content="Bits &amp; Bytes - Kudu zip deployment" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://by.te.ua/tags/Azure" />
+        <meta property="og:url" content="http://by.te.ua/posts/kudu-zip-deployment" />
         <!-- TODO: More social graph meta tags -->
 
         
@@ -78,9 +78,20 @@
                         <div class="container">
                                 <div class="row">
                                         <div class="col-md-12">
-<div class="site-heading">
-    <h1>Azure</h1>
-</div>                                            </div>
+
+    
+<div class="post-heading">
+    <h1>Kudu zip deployment</h1>
+    <div class="meta">        
+Published on Tuesday, January 28, 2020<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/App-Service" class="btn btn-default btn-xs">App Service</a>
+                    <a role="button" href="/tags/Azure" class="btn btn-default btn-xs">Azure</a>
+                    <a role="button" href="/tags/Kudu" class="btn btn-default btn-xs">Kudu</a>
+                    <a role="button" href="/tags/Powershell" class="btn btn-default btn-xs">Powershell</a>
+        </div>     
+</div>
+                                        </div>
                                 </div>
                         </div>
                 </header>
@@ -89,53 +100,24 @@
                 <div class="container">
                         <div class="row">
                                 <div id="content" class="col-md-12">
-                                        <div class="container-sm-height">
-    <div class="row row-sm-height">
-        <div class="col-sm-8 right-border col-sm-height">
-            
-        <div class="post-list">
-            <a href="/posts/kudu-zip-deployment">
-                <h3 class="post-title">Kudu zip deployment</h3>
-            </a>
-            <p class="post-meta">Posted on Tuesday, January 28, 2020</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/posts/find-azure-resource">
-                <h3 class="post-title">Find Azure resource across all subscriptions</h3>
-            </a>
-            <p class="post-meta">Posted on Friday, January 10, 2020</p>      
-        </div>   
-        <div class="post-list">
-            <a href="/posts/load-azure-powershell-on-the-fly">
-                <h3 class="post-title">Load Azure PowersShell on the fly</h3>
-            </a>
-            <p class="post-meta">Posted on Friday, November 8, 2019</p>      
-        </div>   
+                                        
+
+<pre><code>$SiteName = &quot;webapp&quot;
+$SitePassword = &quot;You can get it from publish profile&quot;
+$ApiUrl = &quot;https://$SiteName.scm.azurewebsites.de/api/zipdeploy&quot;
+$ArchivePath = &quot;WebApp.zip&quot;
+
+$Base64 = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes((&quot;{0}:{1}&quot; -f &quot;`$$SiteName&quot;, $SitePassword)))
+$Headers = &#64;{Authorization=(&quot;Basic {0}&quot; -f $Base64)}
+Invoke-RestMethod -Uri $ApiUrl `
+                  -Headers $Headers `
+                  -UserAgent &quot;powershell/1.0&quot; `
+                  -Method POST -InFile $ArchivePath `
+                  -ContentType &quot;multipart/form-data&quot;
+</code></pre>
 
 
-            <nav>
-                <ul class="pager">
-                    <li class="previous">                
-                    </li>
-                    <li class="next">
-                    </li>
-                </ul>
-            </nav>
-            <hr class="visible-xs-block" />
-        </div>
-		
-        <div class="col-sm-4 col-sm-height">
-                <a role="button" href="/tags/Azure" class="btn btn-primary btn-xs">Azure (3)</a>
-                <a role="button" href="/tags/Powershell" class="btn btn-default btn-xs">Powershell (3)</a>
-                <a role="button" href="/tags/Git" class="btn btn-default btn-xs">Git (2)</a>
-                <a role="button" href="/tags/App-Service" class="btn btn-default btn-xs">App Service (1)</a>
-                <a role="button" href="/tags/Kudu" class="btn btn-default btn-xs">Kudu (1)</a>
-                <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-xs">Cheatsheet (1)</a>
-                <a role="button" href="/tags/NuGet" class="btn btn-default btn-xs">NuGet (1)</a>
-                <a role="button" href="/tags/Module" class="btn btn-default btn-xs">Module (1)</a>
-        </div>
-    </div>
-</div>
+
                                 </div>
                         </div>
                 </div>

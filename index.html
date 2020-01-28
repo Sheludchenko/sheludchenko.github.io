@@ -95,6 +95,26 @@
 <div class="row">
     <div class="col-sm-8 right-border">
                 <div class="post-preview">
+                    <a href="/posts/kudu-zip-deployment">
+                        <h2 class="post-title">Kudu zip deployment</h2>
+                    </a>
+                    <p class="post-meta">Posted on Tuesday, January 28, 2020</p>
+<pre><code>$SiteName = &quot;webapp&quot;
+$SitePassword = &quot;You can get it from publish profile&quot;
+$ApiUrl = &quot;https://$SiteName.scm.azurewebsites.de/api/zipdeploy&quot;
+$ArchivePath = &quot;WebApp.zip&quot;
+
+$Base64 = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes((&quot;{0}:{1}&quot; -f &quot;`$$SiteName&quot;, $SitePassword)))
+$Headers = &#64;{Authorization=(&quot;Basic {0}&quot; -f $Base64)}
+Invoke-RestMethod -Uri $ApiUrl `
+                  -Headers $Headers `
+                  -UserAgent &quot;powershell/1.0&quot; `
+                  -Method POST -InFile $ArchivePath `
+                  -ContentType &quot;multipart/form-data&quot;
+</code></pre>
+                </div>       
+                    <hr /> 
+                <div class="post-preview">
                     <a href="/posts/git-pull-vs-fetch">
                         <h2 class="post-title">Git pull vs fetch</h2>
                     </a>
@@ -254,12 +274,14 @@ git reset --hard HEAD~1
         <hr class="visible-xs-block" />
 
             <div>
-                    <a role="button" href="/tags/Powershell" class="btn btn-default btn-sm"> Powershell (2)</a>
-                    <a role="button" href="/tags/Azure" class="btn btn-default btn-sm"> Azure (2)</a>
+                    <a role="button" href="/tags/Azure" class="btn btn-default btn-sm"> Azure (3)</a>
+                    <a role="button" href="/tags/Powershell" class="btn btn-default btn-sm"> Powershell (3)</a>
                     <a role="button" href="/tags/Git" class="btn btn-default btn-sm"> Git (2)</a>
-                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (1)</a>
-                    <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
+                    <a role="button" href="/tags/App-Service" class="btn btn-default btn-sm"> App Service (1)</a>
                     <a role="button" href="/tags/NuGet" class="btn btn-default btn-sm"> NuGet (1)</a>
+                    <a role="button" href="/tags/Kudu" class="btn btn-default btn-sm"> Kudu (1)</a>
+                    <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
+                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (1)</a>
             </div>
 		
         
