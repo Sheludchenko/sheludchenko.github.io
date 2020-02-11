@@ -122,6 +122,15 @@ git reset --hard HEAD~1
 <p>Reset file</p>
 <pre><code>git checkout -- &lt;path&gt;
 </code></pre>
+<p>Merge changes as a single commit</p>
+<pre><code>git merge --squash &lt;source branch&gt;
+git commit --message &quot;merge commit message&quot;
+</code></pre>
+<p>Get remote changes and apply local changes</p>
+<pre><code>git stash
+git pull --rebase origin &lt;source branch&gt;
+git stash pop
+</code></pre>
 
 
 

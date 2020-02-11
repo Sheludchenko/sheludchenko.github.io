@@ -31,3 +31,14 @@ Remove last commit
 Reset file
 
     git checkout -- <path>
+
+Merge changes as a single commit
+    
+    git merge --squash <source branch>
+    git commit --message "merge commit message"
+    
+Get remote changes and apply local changes
+    
+    git stash
+    git pull --rebase origin <source branch>
+    git stash pop
