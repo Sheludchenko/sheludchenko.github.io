@@ -95,6 +95,32 @@
 <div class="row">
     <div class="col-sm-8 right-border">
                 <div class="post-preview">
+                    <a href="/posts/kubernetes-101">
+                        <h2 class="post-title">Kubernetes 101</h2>
+                    </a>
+                    <p class="post-meta">Posted on Monday, February 24, 2020</p>
+<p><strong>Tools to install kubernetes cluster</strong></p>
+<ul>
+<li>Local installation
+<ul>
+<li><a href="https://github.com/kubernetes/minikube">minikube</a></li>
+<li><a href="https://docs.docker.com/docker-for-windows/">docker client</a></li>
+</ul>
+</li>
+<li>Server installation
+<ul>
+<li><a href="https://github.com/kubernetes/kops">kops</a> (recomended for AWS)</li>
+<li>kubeadm (more generic)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Useful links</strong></p>
+<ul>
+<li><a href="https://github.com/kelseyhightower/kubernetes-the-hard-way">https://github.com/kelseyhightower/kubernetes-the-hard-way</a></li>
+</ul>
+                </div>       
+                    <hr /> 
+                <div class="post-preview">
                     <a href="/posts/kudu-zip-deployment">
                         <h2 class="post-title">Kudu zip deployment</h2>
                     </a>
@@ -234,44 +260,6 @@ Import-Module Az
 &lt;/packages&gt;
 </code></pre>
                 </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/posts/git-cheatsheet">
-                        <h2 class="post-title">Git cheatsheet</h2>
-                    </a>
-                    <p class="post-meta">Posted on Tuesday, October 29, 2019</p>
-<p>Update existing commit</p>
-<pre><code>git commit --amend --no-edit
-git push --force 
-</code></pre>
-<p>Remove all local changes</p>
-<pre><code>git clean -fdx
-</code></pre>
-<p>Mirror repositories</p>
-<pre><code>git clone --mirror &lt;source.repository&gt;
-cd source.repository.git
-git push --mirror &lt;target.repository&gt;
-</code></pre>
-<p>Update submodules</p>
-<pre><code>git submodule update --init --recursive --progress
-</code></pre>
-<p>Remove last commit</p>
-<pre><code>git reset --soft HEAD~1
-git reset --hard HEAD~1
-</code></pre>
-<p>Reset file</p>
-<pre><code>git checkout -- &lt;path&gt;
-</code></pre>
-<p>Merge changes as a single commit</p>
-<pre><code>git merge --squash &lt;source branch&gt;
-git commit --message &quot;merge commit message&quot;
-</code></pre>
-<p>Get remote changes and apply local changes</p>
-<pre><code>git stash
-git pull --rebase origin &lt;source branch&gt;
-git stash pop
-</code></pre>
-                </div>       
         <ul class="pager">
             <li class="previous">                
             </li>
@@ -285,12 +273,14 @@ git stash pop
             <div>
                     <a role="button" href="/tags/Powershell" class="btn btn-default btn-sm"> Powershell (3)</a>
                     <a role="button" href="/tags/Azure" class="btn btn-default btn-sm"> Azure (3)</a>
+                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (2)</a>
                     <a role="button" href="/tags/Git" class="btn btn-default btn-sm"> Git (2)</a>
-                    <a role="button" href="/tags/App-Service" class="btn btn-default btn-sm"> App Service (1)</a>
                     <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
                     <a role="button" href="/tags/NuGet" class="btn btn-default btn-sm"> NuGet (1)</a>
                     <a role="button" href="/tags/Kudu" class="btn btn-default btn-sm"> Kudu (1)</a>
-                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (1)</a>
+                    <a role="button" href="/tags/Containers" class="btn btn-default btn-sm"> Containers (1)</a>
+                    <a role="button" href="/tags/Kubernetes" class="btn btn-default btn-sm"> Kubernetes (1)</a>
+                    <a role="button" href="/tags/App-Service" class="btn btn-default btn-sm"> App Service (1)</a>
             </div>
 		
         
