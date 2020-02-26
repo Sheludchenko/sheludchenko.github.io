@@ -95,6 +95,63 @@
 <div class="row">
     <div class="col-sm-8 right-border">
                 <div class="post-preview">
+                    <a href="/posts/add-keyvault-certificate-to-vmss">
+                        <h2 class="post-title">Add KeyVault certificate to VMSS</h2>
+                    </a>
+                    <p class="post-meta">Posted on Wednesday, February 26, 2020</p>
+<pre><code>$KeyVaultName = &quot;KeyVaultName&quot;
+$CertificateName = &quot;CertificateName&quot;
+$VMSSName = &quot;VMSSName&quot;
+$VMSSResourceGroupName = &quot;VMSSResourceGroupName&quot;
+
+
+$KeyVault = Get-AzKeyVault -VaultName $KeyVaultName
+$KeyVaultCertificate = Get-AzKeyVaultCertificate -VaultName $KeyVaultName -Name $CertificateName
+$VMSS = Get-AzVmss -VMScaleSetName $VMSSName -ResourceGroupName $VMSSResourceGroupName
+
+$SourceVaultAlreadyExist = $false
+$CertificateAlreadyExist = $false
+
+$VMSS.VirtualMachineProfile.OsProfile.Secrets | % {
+    if ($_.SourceVault.Id -eq $KeyVault.ResourceId) {
+        $SourceVaultAlreadyExist = $true
+        $SourceVaultId = $VMSS.VirtualMachineProfile.OsProfile.Secrets.IndexOf($_)
+
+        $_.VaultCertificates | % {
+            if ($_.CertificateUrl -eq $KeyVaultCertificate.SecretId) {
+                $CertificateAlreadyExist = $true
+            }
+        }
+
+        if (!$CertificateAlreadyExist) {
+            $Certificate = New-Object Microsoft.Azure.Management.Compute.Models.VaultCertificate
+            $Certificate.CertificateStore = &quot;My&quot;
+            $Certificate.CertificateUrl = $KeyVaultCertificate.SecretId
+            $VMSS.VirtualMachineProfile.OsProfile.Secrets[$SourceVaultId].VaultCertificates.Add($Certificate)
+        }
+    }
+}
+
+if (!$SourceVaultAlreadyExist -and !$CertificateAlreadyExist) {
+    $Secrets = New-Object System.Collections.Generic.List[Microsoft.Azure.Management.Compute.Models.VaultSecretGroup]
+    $Secret = New-Object Microsoft.Azure.Management.Compute.Models.VaultSecretGroup
+    $Secret.SourceVault = $KeyVault.ResourceId
+    $Certificates = New-Object System.Collections.Generic.List[Microsoft.Azure.Management.Compute.Models.VaultCertificate]
+    $Certificate = New-Object Microsoft.Azure.Management.Compute.Models.VaultCertificate
+    $Certificate.CertificateStore = &quot;My&quot;
+    $Certificate.CertificateUrl = $KeyVaultCertificate.SecretId
+    $Certificates.Add($Certificate)
+    $Secret.VaultCertificates = $Certificates
+    $Secrets.Add($Secret)
+    $VMSS.VirtualMachineProfile.OsProfile.Secrets = $Secrets
+}
+
+$VMSS.VirtualMachineProfile.OsProfile.Secrets | ConvertTo-Json -Depth 10
+$VMSS | Update-AzVmss
+</code></pre>
+                </div>       
+                    <hr /> 
+                <div class="post-preview">
                     <a href="/posts/kubernetes-101">
                         <h2 class="post-title">Kubernetes 101</h2>
                     </a>
@@ -159,107 +216,6 @@ Invoke-RestMethod -Uri $ApiUrl `
 }
 </code></pre>
                 </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/posts/load-azure-powershell-on-the-fly">
-                        <h2 class="post-title">Load Azure PowersShell on the fly</h2>
-                    </a>
-                    <p class="post-meta">Posted on Friday, November 8, 2019</p>
-<p>Sometimes installing modules on the system is not an option. E.g. build servers or any kind of machines where you want to run non-standard cmdlet but you don't want to (or not allowed to) install anything.</p>
-<p>In order to do it you need three files.</p>
-<p><strong>load.ps1</strong> - does the heavy lifting. Just look at the script. Everything works pretty straight forward.</p>
-<pre><code>$modulesPath = &quot;.\modules&quot;
-
-# Cleanup
-Remove-Module Az*
-Remove-Item -Path $modulesPath -Force -Recurse
-
-# Download nuget.exe in case you don't have it
-Invoke-WebRequest -Uri &quot;https://dist.nuget.org/win-x86-commandline/latest/nuget.exe&quot; -OutFile &quot;nuget.exe&quot;
-
-# Restore packages from PowerShell Gallery
-&amp; &quot;.\nuget.exe&quot; &quot;restore&quot; &quot;packages.config&quot; &quot;-packagesdirectory&quot; $modulesPath
-
-# Remove version portion from each package folder (otherwise system will not recognize modules)
-Get-ChildItem $modulesPath -Directory | % { 
-    Rename-Item -Path $_.FullName -NewName $($_.Name -replace &quot;\.\d+\.\d+\.\d+&quot;,&quot;&quot;) 
-}
-
-# Add our module folder to the system modules path
-$env:PSModulePath += &quot;;$(Resolve-Path -Path $modulesPath)&quot;
-
-# Import Az module
-Import-Module Az
-</code></pre>
-<p><strong>nuget.config</strong> - defines package source. By default nuget.exe will use nuget.org or any other repository defined on a user/system level. The chances that it already has PowerShell Gallery in it is pretty low (at least in the environments I work with).</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;configuration&gt;
-&lt;packageSources&gt;
-    &lt;add key=&quot;powershellgallery.com&quot; value=&quot;https://www.powershellgallery.com/api/v2/&quot; protocolVersion=&quot;2&quot; /&gt;
-&lt;/packageSources&gt;
-&lt;config&gt;
-    &lt;add key=&quot;signatureValidationMode&quot; value=&quot;Accept&quot; /&gt;
-&lt;/config&gt;
-&lt;/configuration&gt;
-</code></pre>
-<p><strong>packages.config</strong> - holds the list of packages. In our case we're getting Az 2.8.0 but it can be adjusted to download virtually any number/kind of modules (don't forget to add Import-Module statements for any other module(s) you add).</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;packages&gt;
-    &lt;package id=&quot;Az&quot; version=&quot;2.8.0&quot; /&gt;
-    &lt;package id=&quot;Az.Accounts&quot; version=&quot;1.6.4&quot; /&gt;
-    &lt;package id=&quot;Az.Advisor&quot; version=&quot;1.0.1&quot; /&gt;
-    &lt;package id=&quot;Az.Aks&quot; version=&quot;1.0.2&quot; /&gt;
-    &lt;package id=&quot;Az.AnalysisServices&quot; version=&quot;1.1.1&quot; /&gt;
-    &lt;package id=&quot;Az.ApiManagement&quot; version=&quot;1.3.2&quot; /&gt;
-    &lt;package id=&quot;Az.ApplicationInsights&quot; version=&quot;1.0.2&quot; /&gt;
-    &lt;package id=&quot;Az.Automation&quot; version=&quot;1.3.4&quot; /&gt;
-    &lt;package id=&quot;Az.Batch&quot; version=&quot;1.1.2&quot; /&gt;
-    &lt;package id=&quot;Az.Billing&quot; version=&quot;1.0.1&quot; /&gt;
-    &lt;package id=&quot;Az.Cdn&quot; version=&quot;1.3.1&quot; /&gt;
-    &lt;package id=&quot;Az.CognitiveServices&quot; version=&quot;1.2.1&quot; /&gt;
-    &lt;package id=&quot;Az.Compute&quot; version=&quot;2.7.0&quot; /&gt;
-    &lt;package id=&quot;Az.ContainerInstance&quot; version=&quot;1.0.1&quot; /&gt;
-    &lt;package id=&quot;Az.ContainerRegistry&quot; version=&quot;1.1.0&quot; /&gt;
-    &lt;package id=&quot;Az.DataFactory&quot; version=&quot;1.4.0&quot; /&gt;
-    &lt;package id=&quot;Az.DataLakeAnalytics&quot; version=&quot;1.0.1&quot; /&gt;
-    &lt;package id=&quot;Az.DataLakeStore&quot; version=&quot;1.2.3&quot; /&gt;
-    &lt;package id=&quot;Az.DeploymentManager&quot; version=&quot;1.0.1&quot; /&gt;
-    &lt;package id=&quot;Az.DevTestLabs&quot; version=&quot;1.0.0&quot; /&gt;
-    &lt;package id=&quot;Az.Dns&quot; version=&quot;1.1.1&quot; /&gt;
-    &lt;package id=&quot;Az.EventGrid&quot; version=&quot;1.2.2&quot; /&gt;
-    &lt;package id=&quot;Az.EventHub&quot; version=&quot;1.4.0&quot; /&gt;
-    &lt;package id=&quot;Az.FrontDoor&quot; version=&quot;1.1.1&quot; /&gt;
-    &lt;package id=&quot;Az.HDInsight&quot; version=&quot;2.0.2&quot; /&gt;
-    &lt;package id=&quot;Az.HealthcareApis&quot; version=&quot;1.0.0&quot; /&gt;
-    &lt;package id=&quot;Az.IotHub&quot; version=&quot;1.3.1&quot; /&gt;
-    &lt;package id=&quot;Az.KeyVault&quot; version=&quot;1.3.1&quot; /&gt;
-    &lt;package id=&quot;Az.LogicApp&quot; version=&quot;1.3.1&quot; /&gt;
-    &lt;package id=&quot;Az.MachineLearning&quot; version=&quot;1.1.1&quot; /&gt;
-    &lt;package id=&quot;Az.ManagedServices&quot; version=&quot;1.0.1&quot; /&gt;
-    &lt;package id=&quot;Az.MarketplaceOrdering&quot; version=&quot;1.0.1&quot; /&gt;
-    &lt;package id=&quot;Az.Media&quot; version=&quot;1.1.0&quot; /&gt;
-    &lt;package id=&quot;Az.Monitor&quot; version=&quot;1.4.0&quot; /&gt;
-    &lt;package id=&quot;Az.Network&quot; version=&quot;1.15.0&quot; /&gt;
-    &lt;package id=&quot;Az.NotificationHubs&quot; version=&quot;1.1.0&quot; /&gt;
-    &lt;package id=&quot;Az.OperationalInsights&quot; version=&quot;1.3.3&quot; /&gt;
-    &lt;package id=&quot;Az.PolicyInsights&quot; version=&quot;1.1.3&quot; /&gt;
-    &lt;package id=&quot;Az.PowerBIEmbedded&quot; version=&quot;1.1.0&quot; /&gt;
-    &lt;package id=&quot;Az.RecoveryServices&quot; version=&quot;1.4.5&quot; /&gt;
-    &lt;package id=&quot;Az.RedisCache&quot; version=&quot;1.1.1&quot; /&gt;
-    &lt;package id=&quot;Az.Relay&quot; version=&quot;1.0.2&quot; /&gt;
-    &lt;package id=&quot;Az.Resources&quot; version=&quot;1.7.0&quot; /&gt;
-    &lt;package id=&quot;Az.ServiceBus&quot; version=&quot;1.4.0&quot; /&gt;
-    &lt;package id=&quot;Az.ServiceFabric&quot; version=&quot;1.2.0&quot; /&gt;
-    &lt;package id=&quot;Az.SignalR&quot; version=&quot;1.1.0&quot; /&gt;
-    &lt;package id=&quot;Az.Sql&quot; version=&quot;1.15.0&quot; /&gt;
-    &lt;package id=&quot;Az.Storage&quot; version=&quot;1.8.0&quot; /&gt;
-    &lt;package id=&quot;Az.StorageSync&quot; version=&quot;1.2.1&quot; /&gt;
-    &lt;package id=&quot;Az.StreamAnalytics&quot; version=&quot;1.0.0&quot; /&gt;
-    &lt;package id=&quot;Az.TrafficManager&quot; version=&quot;1.0.2&quot; /&gt;
-    &lt;package id=&quot;Az.Websites&quot; version=&quot;1.5.0&quot; /&gt;
-&lt;/packages&gt;
-</code></pre>
-                </div>       
         <ul class="pager">
             <li class="previous">                
             </li>
@@ -271,16 +227,19 @@ Import-Module Az
         <hr class="visible-xs-block" />
 
             <div>
+                    <a role="button" href="/tags/Azure" class="btn btn-default btn-sm"> Azure (4)</a>
                     <a role="button" href="/tags/Powershell" class="btn btn-default btn-sm"> Powershell (3)</a>
-                    <a role="button" href="/tags/Azure" class="btn btn-default btn-sm"> Azure (3)</a>
-                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (2)</a>
                     <a role="button" href="/tags/Git" class="btn btn-default btn-sm"> Git (2)</a>
-                    <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
-                    <a role="button" href="/tags/NuGet" class="btn btn-default btn-sm"> NuGet (1)</a>
+                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (2)</a>
                     <a role="button" href="/tags/Kudu" class="btn btn-default btn-sm"> Kudu (1)</a>
+                    <a role="button" href="/tags/VMSS" class="btn btn-default btn-sm"> VMSS (1)</a>
+                    <a role="button" href="/tags/KeyVault" class="btn btn-default btn-sm"> KeyVault (1)</a>
                     <a role="button" href="/tags/Containers" class="btn btn-default btn-sm"> Containers (1)</a>
                     <a role="button" href="/tags/Kubernetes" class="btn btn-default btn-sm"> Kubernetes (1)</a>
+                    <a role="button" href="/tags/Certificate" class="btn btn-default btn-sm"> Certificate (1)</a>
                     <a role="button" href="/tags/App-Service" class="btn btn-default btn-sm"> App Service (1)</a>
+                    <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
+                    <a role="button" href="/tags/NuGet" class="btn btn-default btn-sm"> NuGet (1)</a>
             </div>
 		
         
