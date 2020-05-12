@@ -14,7 +14,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Bits &amp; Bytes - Add KeyVault certificate to VMSS</title>
+        <title>Bits &amp; Bytes - Terraform 101</title>
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -35,9 +35,9 @@
         <meta name="msapplication-tooltip" content="Bits &amp; Bytes" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Bits &amp; Bytes - Add KeyVault certificate to VMSS" />
+        <meta property="og:title" content="Bits &amp; Bytes - Terraform 101" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://by.te.ua/posts/add-keyvault-certificate-to-vmss" />
+        <meta property="og:url" content="http://by.te.ua/posts/terraform-cheatsheet" />
         <!-- TODO: More social graph meta tags -->
 
         
@@ -80,14 +80,13 @@
 
     
 <div class="post-heading">
-    <h1>Add KeyVault certificate to VMSS</h1>
+    <h1>Terraform 101</h1>
     <div class="meta">        
-Published on Wednesday, February 26, 2020<br>    </div>
+Published on Tuesday, May 12, 2020<br>    </div>
         <div class="tags">
-                    <a role="button" href="/tags/Azure" class="btn btn-default btn-xs">Azure</a>
-                    <a role="button" href="/tags/Certificate" class="btn btn-default btn-xs">Certificate</a>
-                    <a role="button" href="/tags/KeyVault" class="btn btn-default btn-xs">KeyVault</a>
-                    <a role="button" href="/tags/VMSS" class="btn btn-default btn-xs">VMSS</a>
+                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-xs">Cheatsheet</a>
+                    <a role="button" href="/tags/Draft" class="btn btn-default btn-xs">Draft</a>
+                    <a role="button" href="/tags/Terraform" class="btn btn-default btn-xs">Terraform</a>
         </div>     
 </div>
                                         </div>
@@ -101,56 +100,98 @@ Published on Wednesday, February 26, 2020<br>    </div>
                                 <div id="content" class="col-md-12">
                                         
 
-<pre><code>$KeyVaultName = &quot;KeyVaultName&quot;
-$CertificateName = &quot;CertificateName&quot;
-$VMSSName = &quot;VMSSName&quot;
-$VMSSResourceGroupName = &quot;VMSSResourceGroupName&quot;
-
-
-$KeyVault = Get-AzKeyVault -VaultName $KeyVaultName
-$KeyVaultCertificate = Get-AzKeyVaultCertificate -VaultName $KeyVaultName -Name $CertificateName
-$VMSS = Get-AzVmss -VMScaleSetName $VMSSName -ResourceGroupName $VMSSResourceGroupName
-
-$SourceVaultAlreadyExist = $false
-$CertificateAlreadyExist = $false
-
-$VMSS.VirtualMachineProfile.OsProfile.Secrets | % {
-    if ($_.SourceVault.Id -eq $KeyVault.ResourceId) {
-        $SourceVaultAlreadyExist = $true
-        $SourceVaultId = $VMSS.VirtualMachineProfile.OsProfile.Secrets.IndexOf($_)
-
-        $_.VaultCertificates | % {
-            if ($_.CertificateUrl -eq $KeyVaultCertificate.SecretId) {
-                $CertificateAlreadyExist = $true
-            }
-        }
-
-        if (!$CertificateAlreadyExist) {
-            $Certificate = New-Object Microsoft.Azure.Management.Compute.Models.VaultCertificate
-            $Certificate.CertificateStore = &quot;My&quot;
-            $Certificate.CertificateUrl = $KeyVaultCertificate.SecretId
-            $VMSS.VirtualMachineProfile.OsProfile.Secrets[$SourceVaultId].VaultCertificates.Add($Certificate)
+<h3 id="files">Files</h3>
+<ul>
+<li><strong>main.tf</strong> - resource definition, main logic</li>
+<li><strong>data.tf</strong> - data from existing resources</li>
+<li><strong>output.tf</strong> - data output</li>
+<li><strong>terraform.tf</strong> - terraform settings</li>
+<li><strong>variables.tf</strong> - variables definition</li>
+<li><strong>terraform.tfvars</strong> and *<strong>.auto.tfvars</strong> - variable initialization</li>
+</ul>
+<h3 id="variables">Variables</h3>
+<ul>
+<li><a href="https://www.terraform.io/docs/configuration/types.html">Official documentation page</a></li>
+<li>Can be defined in files like <strong>terraform.tfvars</strong> or *<strong>.auto.tfvars</strong></li>
+<li>You can use any name for <strong>tfvars</strong> file by using <strong>-var-file</strong> option of <strong>terraform apply</strong></li>
+<li>Variables can be passed directly to <strong>terraform apply</strong> by using <strong>-var &quot;varaible=value&quot;</strong> (multiple instances of <strong>-var</strong> can be used to pass multiple variables)</li>
+<li>Any environment variable which starts with <strong>TF_VAR_</strong> gets treated by Terraform like a variable</li>
+</ul>
+<h4 id="syntax">Syntax</h4>
+<pre><code class="language-terraform"># String variable with validation
+variable &quot;string_variable&quot; {
+    type        = string
+    description = &quot;String variable is a sequence of Unicode characters&quot;
+    validation  {
+        condition = length(regexall(&quot;^(Expected|Values)&quot;, var.variable_name)) == 1
+        error_message = &quot;Variable must be set with expected value&quot;
+    }
+}
+</code></pre>
+<pre><code class="language-terraform"># Bool variable
+variable &quot;bool_variable&quot; {
+    type        = bool
+    description = &quot;Bool variable either true or false and values can be used in conditional logic&quot;
+    default     = true
+}
+</code></pre>
+<pre><code class="language-terraform"># Number variable
+variable &quot;number_variable&quot; {
+    type        = number
+    description = &quot;Number variable type can represent both whole and fractional&quot;
+}
+</code></pre>
+<pre><code class="language-terraform"># Number variable
+variable &quot;list_variable&quot; {
+    type        = list(&lt;type&gt;)
+    description = &quot;List variable accepts any element type as long as every element is the same type&quot;
+}
+</code></pre>
+<pre><code class="language-terraform"># Map variable
+variable &quot;map_variable&quot; {
+    type        = map
+    description = &quot;Map variable a collection of values where each is identified by a string label&quot;
+    default     = {
+        key1    = &quot;value&quot;
+        key2    = 43
+        key3    = (&quot;1&quot;,&quot;2&quot;,&quot;3&quot;)
+        key4    = {
+            subkey1 = &quot;sample&quot;
+            subkey2 = &quot;value&quot;
         }
     }
 }
+</code></pre>
+<h4 id="local-variables">Local variables</h4>
+<pre><code class="language-terraform"># Local variables
+# To use local variable you have to prefix its name with local. instead of var. e.g. local.local_string_variable
+locals {
+  local_string_variable = &quot;test&quot;
+}
+</code></pre>
+<h3 id="conditionals">Conditionals</h3>
+<pre><code class="language-terraform"># CONDITION ? TRUEVAL : FALSEVAL
 
-if (!$SourceVaultAlreadyExist -and !$CertificateAlreadyExist) {
-    $Secrets = New-Object System.Collections.Generic.List[Microsoft.Azure.Management.Compute.Models.VaultSecretGroup]
-    $Secret = New-Object Microsoft.Azure.Management.Compute.Models.VaultSecretGroup
-    $Secret.SourceVault = $KeyVault.ResourceId
-    $Certificates = New-Object System.Collections.Generic.List[Microsoft.Azure.Management.Compute.Models.VaultCertificate]
-    $Certificate = New-Object Microsoft.Azure.Management.Compute.Models.VaultCertificate
-    $Certificate.CertificateStore = &quot;My&quot;
-    $Certificate.CertificateUrl = $KeyVaultCertificate.SecretId
-    $Certificates.Add($Certificate)
-    $Secret.VaultCertificates = $Certificates
-    $Secrets.Add($Secret)
-    $VMSS.VirtualMachineProfile.OsProfile.Secrets = $Secrets
+# Operators:
+#  - Equality: == and !=
+#  - Comparison: &gt;, &lt;, &gt;= and &lt;=
+#  - Logic: &amp;&amp;, || and unary !
+
+# Set resource option value based on variable value 
+resource &quot;sample_resource&quot; &quot;this&quot; {
+    option = var.test == &quot;value&quot; ? 1 : 0
 }
 
-$VMSS.VirtualMachineProfile.OsProfile.Secrets | ConvertTo-Json -Depth 10
-$VMSS | Update-AzVmss
+# Conditional resource creation
+resource &quot;another_sample_resource&quot; &quot;this&quot; {
+    count = var.create_another_sample_resource ? 1 : 0
+}
 </code></pre>
+<h3 id="useful-links">Useful links</h3>
+<ul>
+<li><a href="https://www.terraform-best-practices.com/">https://www.terraform-best-practices.com/</a></li>
+<li><a href="https://blog.gruntwork.io/terraform-tips-tricks-loops-if-statements-and-gotchas-f739bbae55f9">https://blog.gruntwork.io/terraform-tips-tricks-loops-if-statements-and-gotchas-f739bbae55f9</a></li>
+</ul>
 
 
 

@@ -63,8 +63,7 @@
                                 <!-- Collect the nav links, forms, and other content for toggling -->
                                 <div class="collapse navbar-collapse" id="navbar-collapse">
                                         <ul class="nav navbar-nav navbar-right">
-                                                        <li><a href="/posts">Archive</a></li>
-        <li><a href="/tags">Tags</a></li>
+                                                        <li><a href="/tags">Tags</a></li>
  
                                         </ul>
                                 </div>
@@ -94,6 +93,105 @@
                                         
 <div class="row">
     <div class="col-sm-8 right-border">
+                <div class="post-preview">
+                    <a href="/posts/terraform-cheatsheet">
+                        <h2 class="post-title">Terraform 101</h2>
+                    </a>
+                    <p class="post-meta">Posted on Tuesday, May 12, 2020</p>
+<h3 id="files">Files</h3>
+<ul>
+<li><strong>main.tf</strong> - resource definition, main logic</li>
+<li><strong>data.tf</strong> - data from existing resources</li>
+<li><strong>output.tf</strong> - data output</li>
+<li><strong>terraform.tf</strong> - terraform settings</li>
+<li><strong>variables.tf</strong> - variables definition</li>
+<li><strong>terraform.tfvars</strong> and *<strong>.auto.tfvars</strong> - variable initialization</li>
+</ul>
+<h3 id="variables">Variables</h3>
+<ul>
+<li><a href="https://www.terraform.io/docs/configuration/types.html">Official documentation page</a></li>
+<li>Can be defined in files like <strong>terraform.tfvars</strong> or *<strong>.auto.tfvars</strong></li>
+<li>You can use any name for <strong>tfvars</strong> file by using <strong>-var-file</strong> option of <strong>terraform apply</strong></li>
+<li>Variables can be passed directly to <strong>terraform apply</strong> by using <strong>-var &quot;varaible=value&quot;</strong> (multiple instances of <strong>-var</strong> can be used to pass multiple variables)</li>
+<li>Any environment variable which starts with <strong>TF_VAR_</strong> gets treated by Terraform like a variable</li>
+</ul>
+<h4 id="syntax">Syntax</h4>
+<pre><code class="language-terraform"># String variable with validation
+variable &quot;string_variable&quot; {
+    type        = string
+    description = &quot;String variable is a sequence of Unicode characters&quot;
+    validation  {
+        condition = length(regexall(&quot;^(Expected|Values)&quot;, var.variable_name)) == 1
+        error_message = &quot;Variable must be set with expected value&quot;
+    }
+}
+</code></pre>
+<pre><code class="language-terraform"># Bool variable
+variable &quot;bool_variable&quot; {
+    type        = bool
+    description = &quot;Bool variable either true or false and values can be used in conditional logic&quot;
+    default     = true
+}
+</code></pre>
+<pre><code class="language-terraform"># Number variable
+variable &quot;number_variable&quot; {
+    type        = number
+    description = &quot;Number variable type can represent both whole and fractional&quot;
+}
+</code></pre>
+<pre><code class="language-terraform"># Number variable
+variable &quot;list_variable&quot; {
+    type        = list(&lt;type&gt;)
+    description = &quot;List variable accepts any element type as long as every element is the same type&quot;
+}
+</code></pre>
+<pre><code class="language-terraform"># Map variable
+variable &quot;map_variable&quot; {
+    type        = map
+    description = &quot;Map variable a collection of values where each is identified by a string label&quot;
+    default     = {
+        key1    = &quot;value&quot;
+        key2    = 43
+        key3    = (&quot;1&quot;,&quot;2&quot;,&quot;3&quot;)
+        key4    = {
+            subkey1 = &quot;sample&quot;
+            subkey2 = &quot;value&quot;
+        }
+    }
+}
+</code></pre>
+<h4 id="local-variables">Local variables</h4>
+<pre><code class="language-terraform"># Local variables
+# To use local variable you have to prefix its name with local. instead of var. e.g. local.local_string_variable
+locals {
+  local_string_variable = &quot;test&quot;
+}
+</code></pre>
+<h3 id="conditionals">Conditionals</h3>
+<pre><code class="language-terraform"># CONDITION ? TRUEVAL : FALSEVAL
+
+# Operators:
+#  - Equality: == and !=
+#  - Comparison: &gt;, &lt;, &gt;= and &lt;=
+#  - Logic: &amp;&amp;, || and unary !
+
+# Set resource option value based on variable value 
+resource &quot;sample_resource&quot; &quot;this&quot; {
+    option = var.test == &quot;value&quot; ? 1 : 0
+}
+
+# Conditional resource creation
+resource &quot;another_sample_resource&quot; &quot;this&quot; {
+    count = var.create_another_sample_resource ? 1 : 0
+}
+</code></pre>
+<h3 id="useful-links">Useful links</h3>
+<ul>
+<li><a href="https://www.terraform-best-practices.com/">https://www.terraform-best-practices.com/</a></li>
+<li><a href="https://blog.gruntwork.io/terraform-tips-tricks-loops-if-statements-and-gotchas-f739bbae55f9">https://blog.gruntwork.io/terraform-tips-tricks-loops-if-statements-and-gotchas-f739bbae55f9</a></li>
+</ul>
+                </div>       
+                    <hr /> 
                 <div class="post-preview">
                     <a href="/posts/add-keyvault-certificate-to-vmss">
                         <h2 class="post-title">Add KeyVault certificate to VMSS</h2>
@@ -216,6 +314,145 @@ Invoke-RestMethod -Uri $ApiUrl `
 }
 </code></pre>
                 </div>       
+                    <hr /> 
+                <div class="post-preview">
+                    <a href="/posts/load-azure-powershell-on-the-fly">
+                        <h2 class="post-title">Load Azure PowersShell on the fly</h2>
+                    </a>
+                    <p class="post-meta">Posted on Friday, November 8, 2019</p>
+<p>Sometimes installing modules on the system is not an option. E.g. build servers or any kind of machines where you want to run non-standard cmdlet but you don't want to (or not allowed to) install anything.</p>
+<p>In order to do it you need three files.</p>
+<p><strong>load.ps1</strong> - does the heavy lifting. Just look at the script. Everything works pretty straight forward.</p>
+<pre><code>$modulesPath = &quot;.\modules&quot;
+
+# Cleanup
+Remove-Module Az*
+Remove-Item -Path $modulesPath -Force -Recurse
+
+# Download nuget.exe in case you don't have it
+Invoke-WebRequest -Uri &quot;https://dist.nuget.org/win-x86-commandline/latest/nuget.exe&quot; -OutFile &quot;nuget.exe&quot;
+
+# Restore packages from PowerShell Gallery
+&amp; &quot;.\nuget.exe&quot; &quot;restore&quot; &quot;packages.config&quot; &quot;-packagesdirectory&quot; $modulesPath
+
+# Remove version portion from each package folder (otherwise system will not recognize modules)
+Get-ChildItem $modulesPath -Directory | % { 
+    Rename-Item -Path $_.FullName -NewName $($_.Name -replace &quot;\.\d+\.\d+\.\d+&quot;,&quot;&quot;) 
+}
+
+# Add our module folder to the system modules path
+$env:PSModulePath += &quot;;$(Resolve-Path -Path $modulesPath)&quot;
+
+# Import Az module
+Import-Module Az
+</code></pre>
+<p><strong>nuget.config</strong> - defines package source. By default nuget.exe will use nuget.org or any other repository defined on a user/system level. The chances that it already has PowerShell Gallery in it is pretty low (at least in the environments I work with).</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;configuration&gt;
+&lt;packageSources&gt;
+    &lt;add key=&quot;powershellgallery.com&quot; value=&quot;https://www.powershellgallery.com/api/v2/&quot; protocolVersion=&quot;2&quot; /&gt;
+&lt;/packageSources&gt;
+&lt;config&gt;
+    &lt;add key=&quot;signatureValidationMode&quot; value=&quot;Accept&quot; /&gt;
+&lt;/config&gt;
+&lt;/configuration&gt;
+</code></pre>
+<p><strong>packages.config</strong> - holds the list of packages. In our case we're getting Az 2.8.0 but it can be adjusted to download virtually any number/kind of modules (don't forget to add Import-Module statements for any other module(s) you add).</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;packages&gt;
+    &lt;package id=&quot;Az&quot; version=&quot;2.8.0&quot; /&gt;
+    &lt;package id=&quot;Az.Accounts&quot; version=&quot;1.6.4&quot; /&gt;
+    &lt;package id=&quot;Az.Advisor&quot; version=&quot;1.0.1&quot; /&gt;
+    &lt;package id=&quot;Az.Aks&quot; version=&quot;1.0.2&quot; /&gt;
+    &lt;package id=&quot;Az.AnalysisServices&quot; version=&quot;1.1.1&quot; /&gt;
+    &lt;package id=&quot;Az.ApiManagement&quot; version=&quot;1.3.2&quot; /&gt;
+    &lt;package id=&quot;Az.ApplicationInsights&quot; version=&quot;1.0.2&quot; /&gt;
+    &lt;package id=&quot;Az.Automation&quot; version=&quot;1.3.4&quot; /&gt;
+    &lt;package id=&quot;Az.Batch&quot; version=&quot;1.1.2&quot; /&gt;
+    &lt;package id=&quot;Az.Billing&quot; version=&quot;1.0.1&quot; /&gt;
+    &lt;package id=&quot;Az.Cdn&quot; version=&quot;1.3.1&quot; /&gt;
+    &lt;package id=&quot;Az.CognitiveServices&quot; version=&quot;1.2.1&quot; /&gt;
+    &lt;package id=&quot;Az.Compute&quot; version=&quot;2.7.0&quot; /&gt;
+    &lt;package id=&quot;Az.ContainerInstance&quot; version=&quot;1.0.1&quot; /&gt;
+    &lt;package id=&quot;Az.ContainerRegistry&quot; version=&quot;1.1.0&quot; /&gt;
+    &lt;package id=&quot;Az.DataFactory&quot; version=&quot;1.4.0&quot; /&gt;
+    &lt;package id=&quot;Az.DataLakeAnalytics&quot; version=&quot;1.0.1&quot; /&gt;
+    &lt;package id=&quot;Az.DataLakeStore&quot; version=&quot;1.2.3&quot; /&gt;
+    &lt;package id=&quot;Az.DeploymentManager&quot; version=&quot;1.0.1&quot; /&gt;
+    &lt;package id=&quot;Az.DevTestLabs&quot; version=&quot;1.0.0&quot; /&gt;
+    &lt;package id=&quot;Az.Dns&quot; version=&quot;1.1.1&quot; /&gt;
+    &lt;package id=&quot;Az.EventGrid&quot; version=&quot;1.2.2&quot; /&gt;
+    &lt;package id=&quot;Az.EventHub&quot; version=&quot;1.4.0&quot; /&gt;
+    &lt;package id=&quot;Az.FrontDoor&quot; version=&quot;1.1.1&quot; /&gt;
+    &lt;package id=&quot;Az.HDInsight&quot; version=&quot;2.0.2&quot; /&gt;
+    &lt;package id=&quot;Az.HealthcareApis&quot; version=&quot;1.0.0&quot; /&gt;
+    &lt;package id=&quot;Az.IotHub&quot; version=&quot;1.3.1&quot; /&gt;
+    &lt;package id=&quot;Az.KeyVault&quot; version=&quot;1.3.1&quot; /&gt;
+    &lt;package id=&quot;Az.LogicApp&quot; version=&quot;1.3.1&quot; /&gt;
+    &lt;package id=&quot;Az.MachineLearning&quot; version=&quot;1.1.1&quot; /&gt;
+    &lt;package id=&quot;Az.ManagedServices&quot; version=&quot;1.0.1&quot; /&gt;
+    &lt;package id=&quot;Az.MarketplaceOrdering&quot; version=&quot;1.0.1&quot; /&gt;
+    &lt;package id=&quot;Az.Media&quot; version=&quot;1.1.0&quot; /&gt;
+    &lt;package id=&quot;Az.Monitor&quot; version=&quot;1.4.0&quot; /&gt;
+    &lt;package id=&quot;Az.Network&quot; version=&quot;1.15.0&quot; /&gt;
+    &lt;package id=&quot;Az.NotificationHubs&quot; version=&quot;1.1.0&quot; /&gt;
+    &lt;package id=&quot;Az.OperationalInsights&quot; version=&quot;1.3.3&quot; /&gt;
+    &lt;package id=&quot;Az.PolicyInsights&quot; version=&quot;1.1.3&quot; /&gt;
+    &lt;package id=&quot;Az.PowerBIEmbedded&quot; version=&quot;1.1.0&quot; /&gt;
+    &lt;package id=&quot;Az.RecoveryServices&quot; version=&quot;1.4.5&quot; /&gt;
+    &lt;package id=&quot;Az.RedisCache&quot; version=&quot;1.1.1&quot; /&gt;
+    &lt;package id=&quot;Az.Relay&quot; version=&quot;1.0.2&quot; /&gt;
+    &lt;package id=&quot;Az.Resources&quot; version=&quot;1.7.0&quot; /&gt;
+    &lt;package id=&quot;Az.ServiceBus&quot; version=&quot;1.4.0&quot; /&gt;
+    &lt;package id=&quot;Az.ServiceFabric&quot; version=&quot;1.2.0&quot; /&gt;
+    &lt;package id=&quot;Az.SignalR&quot; version=&quot;1.1.0&quot; /&gt;
+    &lt;package id=&quot;Az.Sql&quot; version=&quot;1.15.0&quot; /&gt;
+    &lt;package id=&quot;Az.Storage&quot; version=&quot;1.8.0&quot; /&gt;
+    &lt;package id=&quot;Az.StorageSync&quot; version=&quot;1.2.1&quot; /&gt;
+    &lt;package id=&quot;Az.StreamAnalytics&quot; version=&quot;1.0.0&quot; /&gt;
+    &lt;package id=&quot;Az.TrafficManager&quot; version=&quot;1.0.2&quot; /&gt;
+    &lt;package id=&quot;Az.Websites&quot; version=&quot;1.5.0&quot; /&gt;
+&lt;/packages&gt;
+</code></pre>
+                </div>       
+                    <hr /> 
+                <div class="post-preview">
+                    <a href="/posts/git-cheatsheet">
+                        <h2 class="post-title">Git cheatsheet</h2>
+                    </a>
+                    <p class="post-meta">Posted on Tuesday, October 29, 2019</p>
+<p>Update existing commit</p>
+<pre><code>git commit --amend --no-edit
+git push --force 
+</code></pre>
+<p>Remove all local changes</p>
+<pre><code>git clean -fdx
+</code></pre>
+<p>Mirror repositories</p>
+<pre><code>git clone --mirror &lt;source.repository&gt;
+cd source.repository.git
+git push --mirror &lt;target.repository&gt;
+</code></pre>
+<p>Update submodules</p>
+<pre><code>git submodule update --init --recursive --progress
+</code></pre>
+<p>Remove last commit</p>
+<pre><code>git reset --soft HEAD~1
+git reset --hard HEAD~1
+</code></pre>
+<p>Reset file</p>
+<pre><code>git checkout -- &lt;path&gt;
+</code></pre>
+<p>Merge changes as a single commit</p>
+<pre><code>git merge --squash &lt;source branch&gt;
+git commit --message &quot;merge commit message&quot;
+</code></pre>
+<p>Get remote changes and apply local changes</p>
+<pre><code>git stash
+git pull --rebase origin &lt;source branch&gt;
+git stash pop
+</code></pre>
+                </div>       
         <ul class="pager">
             <li class="previous">                
             </li>
@@ -229,17 +466,19 @@ Invoke-RestMethod -Uri $ApiUrl `
             <div>
                     <a role="button" href="/tags/Azure" class="btn btn-default btn-sm"> Azure (4)</a>
                     <a role="button" href="/tags/Powershell" class="btn btn-default btn-sm"> Powershell (3)</a>
+                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (3)</a>
                     <a role="button" href="/tags/Git" class="btn btn-default btn-sm"> Git (2)</a>
-                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (2)</a>
-                    <a role="button" href="/tags/Kudu" class="btn btn-default btn-sm"> Kudu (1)</a>
-                    <a role="button" href="/tags/VMSS" class="btn btn-default btn-sm"> VMSS (1)</a>
-                    <a role="button" href="/tags/KeyVault" class="btn btn-default btn-sm"> KeyVault (1)</a>
-                    <a role="button" href="/tags/Containers" class="btn btn-default btn-sm"> Containers (1)</a>
-                    <a role="button" href="/tags/Kubernetes" class="btn btn-default btn-sm"> Kubernetes (1)</a>
-                    <a role="button" href="/tags/Certificate" class="btn btn-default btn-sm"> Certificate (1)</a>
+                    <a role="button" href="/tags/Terraform" class="btn btn-default btn-sm"> Terraform (1)</a>
                     <a role="button" href="/tags/App-Service" class="btn btn-default btn-sm"> App Service (1)</a>
-                    <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
+                    <a role="button" href="/tags/Kudu" class="btn btn-default btn-sm"> Kudu (1)</a>
                     <a role="button" href="/tags/NuGet" class="btn btn-default btn-sm"> NuGet (1)</a>
+                    <a role="button" href="/tags/KeyVault" class="btn btn-default btn-sm"> KeyVault (1)</a>
+                    <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
+                    <a role="button" href="/tags/Containers" class="btn btn-default btn-sm"> Containers (1)</a>
+                    <a role="button" href="/tags/VMSS" class="btn btn-default btn-sm"> VMSS (1)</a>
+                    <a role="button" href="/tags/Draft" class="btn btn-default btn-sm"> Draft (1)</a>
+                    <a role="button" href="/tags/Certificate" class="btn btn-default btn-sm"> Certificate (1)</a>
+                    <a role="button" href="/tags/Kubernetes" class="btn btn-default btn-sm"> Kubernetes (1)</a>
             </div>
 		
         
