@@ -12,6 +12,7 @@ Update existing commit
 Remove all local changes
 
     git clean -fdx
+	git checkout -- .
 
 Mirror repositories
 
@@ -42,3 +43,7 @@ Get remote changes and apply local changes
     git stash
     git pull --rebase origin <source branch>
     git stash pop
+
+Rebase root commit
+
+    git rebase --root

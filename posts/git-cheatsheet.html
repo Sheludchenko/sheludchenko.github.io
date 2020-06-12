@@ -105,6 +105,7 @@ git push --force
 </code></pre>
 <p>Remove all local changes</p>
 <pre><code>git clean -fdx
+git checkout -- .
 </code></pre>
 <p>Mirror repositories</p>
 <pre><code>git clone --mirror &lt;source.repository&gt;
@@ -129,6 +130,9 @@ git commit --message &quot;merge commit message&quot;
 <pre><code>git stash
 git pull --rebase origin &lt;source branch&gt;
 git stash pop
+</code></pre>
+<p>Rebase root commit</p>
+<pre><code>git rebase --root
 </code></pre>
 
 

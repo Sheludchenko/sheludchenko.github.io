@@ -6,7 +6,7 @@ Tags:
     - Draft
 ---
 
-### Files
+## Files
 - **main.tf** - resource definition, main logic
 - **data.tf** - data from existing resources
 - **output.tf** - data output
@@ -14,7 +14,7 @@ Tags:
 - **variables.tf** - variables definition
 - **terraform.tfvars** and ***.auto.tfvars** - variable initialization
 
-### Variables
+## Variables
 
 - [Official documentation page](https://www.terraform.io/docs/configuration/types.html)
 - Can be defined in files like **terraform.tfvars** or ***.auto.tfvars**
@@ -22,9 +22,9 @@ Tags:
 - Variables can be passed directly to **terraform apply** by using **-var "varaible=value"** (multiple instances of **-var** can be used to pass multiple variables)
 - Any environment variable which starts with **TF_VAR_** gets treated by Terraform like a variable
 
-#### Syntax
+### Syntax
+String variable with validation
 ```terraform
-# String variable with validation
 variable "string_variable" {
     type        = string
     description = "String variable is a sequence of Unicode characters"
@@ -34,30 +34,34 @@ variable "string_variable" {
     }
 }
 ```
+
+Bool variable
 ```terraform
-# Bool variable
 variable "bool_variable" {
     type        = bool
     description = "Bool variable either true or false and values can be used in conditional logic"
     default     = true
 }
 ```
+
+Number variable
 ```terraform
-# Number variable
 variable "number_variable" {
     type        = number
     description = "Number variable type can represent both whole and fractional"
 }
 ```
+
+List variable
 ```terraform
-# Number variable
 variable "list_variable" {
     type        = list(<type>)
     description = "List variable accepts any element type as long as every element is the same type"
 }
 ```
+
+Map variable
 ```terraform
-# Map variable
 variable "map_variable" {
     type        = map
     description = "Map variable a collection of values where each is identified by a string label"
@@ -72,9 +76,8 @@ variable "map_variable" {
     }
 }
 ```
-#### Local variables
+### Local variables
 ```terraform
-# Local variables
 # To use local variable you have to prefix its name with local. instead of var. e.g. local.local_string_variable
 locals {
   local_string_variable = "test"

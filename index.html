@@ -94,11 +94,94 @@
 <div class="row">
     <div class="col-sm-8 right-border">
                 <div class="post-preview">
+                    <a href="/posts/ansible-cheatsheet">
+                        <h2 class="post-title">Ansible Cheatsheet</h2>
+                    </a>
+                    <p class="post-meta">Posted on Friday, June 12, 2020</p>
+<h2 id="inventory">Inventory</h2>
+<p>Global inventory location - /etc/ansible/hosts</p>
+<p>List all hosts</p>
+<pre><code>ansible -i inventory/sandbox --list-hosts all
+ansible -i inventory/sandbox --list-hosts *
+</code></pre>
+<p>Show single host</p>
+<pre><code>ansible -i inventory/sandbox --list-hosts app01
+</code></pre>
+<p>Wildcard</p>
+<pre><code>ansible -i inventory/sandbox --list-hosts app*
+</code></pre>
+<p>Group</p>
+<pre><code>ansible -i inventory/sandbox --list-hosts webserver
+</code></pre>
+<p>Multiple</p>
+<pre><code>ansible -i inventory/sandbox --list-hosts webserver:database:lb01
+</code></pre>
+<p>Index</p>
+<pre><code>ansible -i inventory/sandbox --list-hosts webserver[0]
+</code></pre>
+<p>Negation (not match)</p>
+<pre><code>ansible -i inventory/sandbox --list-hosts \!webserver
+</code></pre>
+<p>Run on specific subset of hosts</p>
+<pre><code>ansible-playbook site.yml -i inventory/sandbox --limit app01
+ansible-playbook site.yml -i inventory/sandbox --limit \!webserver
+</code></pre>
+<p><a href="https://docs.ansible.com/ansible/latest/user_guide/intro_patterns.html">More can be found here</a></p>
+<h2 id="tasks">Tasks</h2>
+<p>List tags</p>
+<pre><code>ansible-playbook site.yml -i inventory/sandbox --list-tags
+</code></pre>
+<p>Run tags</p>
+<pre><code>ansible-playbook site.yml -i inventory/sandbox --tags &quot;packages&quot;
+</code></pre>
+<p>Skip tags</p>
+<pre><code>ansible-playbook site.yml -i inventory/sandbox --skip-tags &quot;packages&quot;
+</code></pre>
+<h2 id="variables">Variables</h2>
+<p>List all facts</p>
+<pre><code>ansible -i inventory/sandbox -m setup db01 
+</code></pre>
+<p>Get environment variable</p>
+<pre><code>{{ lookup(&quot;env&quot;, &quot;ENV_VARIABLE&quot;) }}
+</code></pre>
+<h2 id="vault">Vault</h2>
+<p>Create secrets file</p>
+<pre><code>ansible-vault create secrets
+</code></pre>
+<p>Edit secrets file</p>
+<pre><code>ansible-vault edit secrets
+</code></pre>
+<p>Ask for password</p>
+<pre><code>ansible-playbook database.yml -i inventory/sandbox --ask-vault-pass
+</code></pre>
+<p>Use password file</p>
+<pre><code>ansible-playbook database.yml -i inventory/sandbox --vault-password-file ~/.vault_pass
+</code></pre>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Run step-by-step</p>
+<pre><code>ansible-playbook database.yml -i inventory/sandbox --step
+</code></pre>
+<p>Start at specific task</p>
+<pre><code>ansible-playbook database.yml -i inventory/sandbox --list-tasks
+ansible-playbook database.yml -i inventory/sandbox --start-at-task &quot;Create user&quot;
+</code></pre>
+<p>Syntax check</p>
+<pre><code>ansible-playbook database.yml --syntax-check
+</code></pre>
+<p>Dry-run</p>
+<pre><code>ansible-playbook database.yml -i inventory/sandbox --check
+</code></pre>
+<p>List all variables</p>
+<pre><code>- debug: var=vars
+</code></pre>
+                </div>       
+                    <hr /> 
+                <div class="post-preview">
                     <a href="/posts/terraform-cheatsheet">
                         <h2 class="post-title">Terraform 101</h2>
                     </a>
                     <p class="post-meta">Posted on Tuesday, May 12, 2020</p>
-<h3 id="files">Files</h3>
+<h2 id="files">Files</h2>
 <ul>
 <li><strong>main.tf</strong> - resource definition, main logic</li>
 <li><strong>data.tf</strong> - data from existing resources</li>
@@ -107,7 +190,7 @@
 <li><strong>variables.tf</strong> - variables definition</li>
 <li><strong>terraform.tfvars</strong> and *<strong>.auto.tfvars</strong> - variable initialization</li>
 </ul>
-<h3 id="variables">Variables</h3>
+<h2 id="variables">Variables</h2>
 <ul>
 <li><a href="https://www.terraform.io/docs/configuration/types.html">Official documentation page</a></li>
 <li>Can be defined in files like <strong>terraform.tfvars</strong> or *<strong>.auto.tfvars</strong></li>
@@ -115,9 +198,9 @@
 <li>Variables can be passed directly to <strong>terraform apply</strong> by using <strong>-var &quot;varaible=value&quot;</strong> (multiple instances of <strong>-var</strong> can be used to pass multiple variables)</li>
 <li>Any environment variable which starts with <strong>TF_VAR_</strong> gets treated by Terraform like a variable</li>
 </ul>
-<h4 id="syntax">Syntax</h4>
-<pre><code class="language-terraform"># String variable with validation
-variable &quot;string_variable&quot; {
+<h3 id="syntax">Syntax</h3>
+<p>String variable with validation</p>
+<pre><code class="language-terraform">variable &quot;string_variable&quot; {
     type        = string
     description = &quot;String variable is a sequence of Unicode characters&quot;
     validation  {
@@ -126,27 +209,27 @@ variable &quot;string_variable&quot; {
     }
 }
 </code></pre>
-<pre><code class="language-terraform"># Bool variable
-variable &quot;bool_variable&quot; {
+<p>Bool variable</p>
+<pre><code class="language-terraform">variable &quot;bool_variable&quot; {
     type        = bool
     description = &quot;Bool variable either true or false and values can be used in conditional logic&quot;
     default     = true
 }
 </code></pre>
-<pre><code class="language-terraform"># Number variable
-variable &quot;number_variable&quot; {
+<p>Number variable</p>
+<pre><code class="language-terraform">variable &quot;number_variable&quot; {
     type        = number
     description = &quot;Number variable type can represent both whole and fractional&quot;
 }
 </code></pre>
-<pre><code class="language-terraform"># Number variable
-variable &quot;list_variable&quot; {
+<p>List variable</p>
+<pre><code class="language-terraform">variable &quot;list_variable&quot; {
     type        = list(&lt;type&gt;)
     description = &quot;List variable accepts any element type as long as every element is the same type&quot;
 }
 </code></pre>
-<pre><code class="language-terraform"># Map variable
-variable &quot;map_variable&quot; {
+<p>Map variable</p>
+<pre><code class="language-terraform">variable &quot;map_variable&quot; {
     type        = map
     description = &quot;Map variable a collection of values where each is identified by a string label&quot;
     default     = {
@@ -160,9 +243,8 @@ variable &quot;map_variable&quot; {
     }
 }
 </code></pre>
-<h4 id="local-variables">Local variables</h4>
-<pre><code class="language-terraform"># Local variables
-# To use local variable you have to prefix its name with local. instead of var. e.g. local.local_string_variable
+<h3 id="local-variables">Local variables</h3>
+<pre><code class="language-terraform"># To use local variable you have to prefix its name with local. instead of var. e.g. local.local_string_variable
 locals {
   local_string_variable = &quot;test&quot;
 }
@@ -427,6 +509,7 @@ git push --force
 </code></pre>
 <p>Remove all local changes</p>
 <pre><code>git clean -fdx
+git checkout -- .
 </code></pre>
 <p>Mirror repositories</p>
 <pre><code>git clone --mirror &lt;source.repository&gt;
@@ -452,6 +535,9 @@ git commit --message &quot;merge commit message&quot;
 git pull --rebase origin &lt;source branch&gt;
 git stash pop
 </code></pre>
+<p>Rebase root commit</p>
+<pre><code>git rebase --root
+</code></pre>
                 </div>       
         <ul class="pager">
             <li class="previous">                
@@ -464,21 +550,22 @@ git stash pop
         <hr class="visible-xs-block" />
 
             <div>
+                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (4)</a>
                     <a role="button" href="/tags/Azure" class="btn btn-default btn-sm"> Azure (4)</a>
                     <a role="button" href="/tags/Powershell" class="btn btn-default btn-sm"> Powershell (3)</a>
-                    <a role="button" href="/tags/Cheatsheet" class="btn btn-default btn-sm"> Cheatsheet (3)</a>
                     <a role="button" href="/tags/Git" class="btn btn-default btn-sm"> Git (2)</a>
-                    <a role="button" href="/tags/Terraform" class="btn btn-default btn-sm"> Terraform (1)</a>
-                    <a role="button" href="/tags/App-Service" class="btn btn-default btn-sm"> App Service (1)</a>
-                    <a role="button" href="/tags/Kudu" class="btn btn-default btn-sm"> Kudu (1)</a>
-                    <a role="button" href="/tags/NuGet" class="btn btn-default btn-sm"> NuGet (1)</a>
-                    <a role="button" href="/tags/KeyVault" class="btn btn-default btn-sm"> KeyVault (1)</a>
-                    <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
-                    <a role="button" href="/tags/Containers" class="btn btn-default btn-sm"> Containers (1)</a>
-                    <a role="button" href="/tags/VMSS" class="btn btn-default btn-sm"> VMSS (1)</a>
-                    <a role="button" href="/tags/Draft" class="btn btn-default btn-sm"> Draft (1)</a>
-                    <a role="button" href="/tags/Certificate" class="btn btn-default btn-sm"> Certificate (1)</a>
+                    <a role="button" href="/tags/Draft" class="btn btn-default btn-sm"> Draft (2)</a>
                     <a role="button" href="/tags/Kubernetes" class="btn btn-default btn-sm"> Kubernetes (1)</a>
+                    <a role="button" href="/tags/Ansible" class="btn btn-default btn-sm"> Ansible (1)</a>
+                    <a role="button" href="/tags/VMSS" class="btn btn-default btn-sm"> VMSS (1)</a>
+                    <a role="button" href="/tags/App-Service" class="btn btn-default btn-sm"> App Service (1)</a>
+                    <a role="button" href="/tags/NuGet" class="btn btn-default btn-sm"> NuGet (1)</a>
+                    <a role="button" href="/tags/Certificate" class="btn btn-default btn-sm"> Certificate (1)</a>
+                    <a role="button" href="/tags/Containers" class="btn btn-default btn-sm"> Containers (1)</a>
+                    <a role="button" href="/tags/KeyVault" class="btn btn-default btn-sm"> KeyVault (1)</a>
+                    <a role="button" href="/tags/Kudu" class="btn btn-default btn-sm"> Kudu (1)</a>
+                    <a role="button" href="/tags/Terraform" class="btn btn-default btn-sm"> Terraform (1)</a>
+                    <a role="button" href="/tags/Module" class="btn btn-default btn-sm"> Module (1)</a>
             </div>
 		
         
