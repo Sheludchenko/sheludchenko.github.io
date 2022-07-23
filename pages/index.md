@@ -1,4 +1,4 @@
 ---
-label: Welcome
-icon: home
+redirect: cheatsheets/git-cheatsheet.md
+visibility: hidden
 ---
