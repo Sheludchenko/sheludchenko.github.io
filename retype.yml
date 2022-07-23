@@ -1,7 +1,7 @@
 input: pages
 output: .retype
 url: https://by.te.ua
-cname: false
+cname: by.te.ua
 branding:
   title: bits & bytes
   label: v1.0
