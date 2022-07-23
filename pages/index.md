@@ -1,4 +1,4 @@
 ---
-redirect: cheatsheets/git-cheatsheet.md
+redirect: cheatsheets/git.md
 visibility: hidden
 ---
