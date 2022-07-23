@@ -1,0 +1,11 @@
+input: pages
+output: .retype
+url: https://by.te.ua
+cname: false
+branding:
+  title: bits & bytes
+  label: v1.0
+  logo: static/logo-light.png
+  logoDark: static/logo-dark.png
+footer:
+  copyright: "&copy; Copyright {{ year }}. All rights reserved."
